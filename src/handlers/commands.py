@@ -27,16 +27,16 @@ async def start(message: types.Message):
 async def about(message: types.Message):
     tb = TextBuilder(
         version=Code(config.VERSION),
-        news_channel=TextLink("News Channel", url="t.me/SofiaBotRol"),
+        news_channel=TextLink("News channel", url="t.me/sophie_tyt"),
         source=TextLink("Source", url="https://github.com/onilyxe/Sofia"),
         onilyxe=TextLink("onilyxe", url="https://t.me/onilyxe"),
-        den=TextLink("den", url="https://t.me/itsokt0cry"),
+        uranium_depleter=TextLink("uranium depleter", url="https://t.me/j0egoldberg"),
         htivka=TextLink("хтивка", url="https://t.me/yeyevh")
     )
-    tb.add("📡 Sofia {version}\n", True)
+    tb.add("📡 Sophie {version}\n", True)
     tb.add("{news_channel}", True)
     tb.add("{source}\n", True)
-    tb.add("Made {onilyxe}. Idea {den}. Updated {htivka}", True)
+    tb.add("Made {onilyxe}. Idea {uranium_depleter}. Updated {htivka}", True)
     await message.reply(tb.render())
 
 
