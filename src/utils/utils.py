@@ -22,17 +22,25 @@ def get_bet_buttons(user_id: int, game: Games) -> list[InlineKeyboardButton]:
     ) for bet in [1, 5, 10, 20, 30, 40, 50, 100]]
     BET_BUTTONS.append(
         InlineKeyboardButton(text="❌ Злитися", callback_data=BetCallback(user_id=user_id, bet=0,
-                                                                       action=BetButtonType.CANCEL, game=game).pack()
+                                                                         action=BetButtonType.CANCEL, game=game).pack()
                              )
     )
     return BET_BUTTONS
 
 
 # Отримання часу, який залишився до наступного дня
-def get_time_until_midnight(timestamp: int) -> str:
+def get_time_until_midnight(timestamp: int | float) -> str:
     dt = datetime.fromtimestamp(timestamp)
     midnight = datetime(dt.year, dt.month, dt.day) + timedelta(days=1)
-    remaining_time = midnight - dt
+    return get_time_until(timestamp, midnight.timestamp())
+
+
+def get_time_until(timestamp: int | float, timestamp2: int | float) -> str:
+    if timestamp >= timestamp2:
+        return "00:00:00"
+    dt = datetime.fromtimestamp(timestamp)
+    next_dt = datetime.fromtimestamp(timestamp2)
+    remaining_time = next_dt - dt
     hours, remainder = divmod(remaining_time.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     remaining_time_str = f"{hours:02}:{minutes:02}:{seconds:02}"
@@ -133,7 +141,8 @@ def format_uptime(uptime):
 async def generate_top(message: types.Message, results: list[tuple[int, int]], title: str, is_global: bool) -> None:
     tb = TextBuilder()
     if not results:
-        await reply_and_delete(message, tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного бота бляха').render())
+        await reply_and_delete(message,
+                               tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного бота бляха').render())
     else:
         async def get_username(user_id):
             try:
@@ -155,7 +164,6 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
 
         total_kg = sum([value for _, value in results])
 
-        
         tb.add(f'{title}:\n🎱 Усього: {total_kg} кг\n')
         count = 0
         for user_name, (_, rusophobia) in zip(user_names, results):
@@ -166,4 +174,3 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
                        **d)
 
         await reply_and_delete(message, tb.render())
-

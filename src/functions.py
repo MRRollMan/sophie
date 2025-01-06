@@ -33,6 +33,7 @@ async def startup(bot: Bot):
         types.BotCommand(command="/ping", description="статус бота"),
     ]
 
+    config.set_commands([command.command for command in commands])
     await bot.set_my_commands(commands)
     if config.STATUS:
         print("Бот запущений")

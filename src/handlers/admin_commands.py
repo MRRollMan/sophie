@@ -1,5 +1,5 @@
 from aiogram import Router, types
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandObject, or_f
 from aiogram.utils.formatting import Code, TextMention
 
@@ -29,7 +29,7 @@ async def chatlist_command(message: types.Message, db: Database):
                 chat_info = await message.bot.get_chat(chat_id)
                 chat_username = f"@{chat_info.username}" if chat_info.username else ""
                 chat_list_lines.append(f"🔹 {chat_id}, {chat_info.type}, {chat_info.title} {chat_username}")
-            except TelegramBadRequest as e:
+            except TelegramAPIError as e:
                 removed_chats_count += 1
                 removed_chats_info.append(f"🔹 {chat_id} - вилучено ({e.message})")
                 await db.chat.remove_chat(chat_id)
@@ -81,10 +81,10 @@ async def message_command(message: types.Message, command: CommandObject, db: Da
         try:
             await message.bot.send_message(chat[0], text)
             successful_sends += 1
-        except TelegramBadRequest as e:
+        except TelegramAPIError as e:
             error_messages += f"{chat[0]}: {e.message}\n"
 
-    tb.add("Усе зроблено, мій пане. Кількість чатів: `{successful_sends}`", successful_sends=successful_sends)
+    tb.add("Усе зроблено, мій пане. Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
     if error_messages:
         tb.add("\nПомилки:\n{error_messages}", error_messages=error_messages, new_line=True)
 

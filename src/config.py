@@ -19,6 +19,7 @@ class SingletonMeta(type):
 
 class Config(metaclass=SingletonMeta):
     def __init__(self):
+        self._commands = []
         self.__ok = False
 
         try:
@@ -69,6 +70,14 @@ class Config(metaclass=SingletonMeta):
         finally:
             if not self.__ok:
                 exit()
+
+    def set_commands(self, commands: list[str]):
+        self._commands = commands
+
+    def is_command(self, cmd: str):
+        for command in self._commands:
+            if cmd.startswith(command):
+                return True
 
 
 config = Config()
