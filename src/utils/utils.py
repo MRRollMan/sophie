@@ -21,7 +21,7 @@ def get_bet_buttons(user_id: int, game: Games) -> list[InlineKeyboardButton]:
         callback_data=BetCallback(user_id=user_id, bet=bet, action=BetButtonType.BET, game=game).pack()
     ) for bet in [1, 5, 10, 20, 30, 40, 50, 100]]
     BET_BUTTONS.append(
-        InlineKeyboardButton(text="❌ Злитися", callback_data=BetCallback(user_id=user_id, bet=0,
+        InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
                                                                          action=BetButtonType.CANCEL, game=game).pack()
                              )
     )
@@ -76,12 +76,12 @@ async def process_regular_bet(
     play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY)
     cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL)
 
-    kb.row(InlineKeyboardButton(text="▶️ Полетіли", callback_data=play.pack()),
-           InlineKeyboardButton(text="❌ Злитися", callback_data=cancel.pack()), width=1)
+    kb.row(InlineKeyboardButton(text="▶️ Ебаш", callback_data=play.pack()),
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
-    tb.add("{emoji} {user}, готовий(а) курва?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
-    tb.add("🏷️ Шо ти поставив: {bet} кг", True, bet=Code(bet))
-    tb.add("💰 Шо можеш виграти: {potential_win} кг", True, potential_win=potential_win)
+    tb.add("{emoji} {user}, готовий хуйло?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
+    tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
+    tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=potential_win)
 
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
@@ -142,7 +142,7 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
     tb = TextBuilder()
     if not results:
         await reply_and_delete(message,
-                               tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного бота бляха').render())
+                               tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного раба').render())
     else:
         async def get_username(user_id):
             try:
@@ -164,7 +164,7 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
 
         total_kg = sum([value for _, value in results])
 
-        tb.add(f'{title}:\n🎱 Усього: {total_kg} кг\n')
+        tb.add(f'{title}:\n🎱 Всього: {total_kg} кг\n')
         count = 0
         for user_name, (_, rusophobia) in zip(user_names, results):
             if user_name:

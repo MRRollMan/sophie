@@ -23,11 +23,11 @@ async def give(message: types.Message, command: CommandObject, db: Database, cha
             or message.reply_to_message.from_user.is_bot
             or not args or len(args := args.split()) != 1
     ):
-        tb.add("Ну і баран. Приклад:  {cmd}. Не забудь про реплай", cmd=Code(f"/give N"))
+        tb.add("Ну і їблан. Приклад: {cmd}. Не забудь про реплай", cmd=Code(f"/give N"))
         await reply_and_delete(message, tb.render())
         return
     if not (value := args[0]).isdigit() or (value := int(value)) == 0:
-        tb.add("Гнида, йди нахуй")
+        tb.add("Гніда, йди нахуй")
         await reply_and_delete(message, tb.render())
         return
 
@@ -77,7 +77,7 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
     tb = TextBuilder()
     tb.add("✅ {giver} передав {value} кг русофобії {receiver}.\n🏷️ Тепер в тебе: {new_value} кг",
            value=Code(value), new_value=Code(new_balance),
-           giver=TextMention(query.from_user.first_name, user=query.from_user),
+           giver=TextMention(query.from_user.firОхорона скасуванняst_name, user=query.from_user),
            receiver=TextMention(receiver.user.first_name, user=receiver.user))
 
     try:
@@ -93,5 +93,5 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
 
 @commands_router.callback_query(GiveCallback.filter((F.action == GiveEnum.NO)), IsCurrentUser(True), )
 async def give_yes(query: CallbackQuery):
-    await query.bot.answer_callback_query(query.id, "Ой бляха заїбали передумувати..")
-    await query.message.edit_text("🔄 Охорона все скасувала")
+    await query.bot.answer_callback_query(query.id, "Хуйло злякалось.. ")
+    await query.message.edit_text("🔄 Ну ок хулі")

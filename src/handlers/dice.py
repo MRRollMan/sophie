@@ -44,9 +44,9 @@ async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
 
     kb.row(InlineKeyboardButton(text="➗ Парне", callback_data=even.pack()),
            InlineKeyboardButton(text="✖️ Непарне", callback_data=odd.pack()),
-           InlineKeyboardButton(text="❌ Злитися", callback_data=cancel.pack()), width=2)
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=2)
 
-    tb.add("🎲 {user}, роби вибір:\n", user=TextMention(user.first_name, user=user))
+    tb.add("🎲 {user} сосав?\n", user=TextMention(user.first_name, user=user))
     tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
     tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
 
@@ -69,13 +69,13 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
     if dice_value % 2 == parity:
         bet_won = math.ceil(callback_data.bet * 1.5)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, красава. Випало {dice_value}, {parity}")
-        tb.add("🎲 Твій виграш: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏆 {user}, пєрємога {dice_value}, {parity}")
+        tb.add("🎲 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
-        tb.add("😔 {user}, лох {dice_value}, {parity}")
-        tb.add("🎲 Втрата: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("😔 {user} відсмоктав {dice_value}, {parity}")
+        tb.add("🎲 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
@@ -90,6 +90,6 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
 
 @games_router.callback_query(DiceCallback.filter(F.parity == DiceParityEnum.CANCEL), IsCurrentUser(True))
 async def dice_callback_bet_cancel(callback: types.CallbackQuery, callback_data: DiceCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Шльондра злилася..")
-    await callback.message.edit_text(TextBuilder("ℹ️ Гру скасовано. Твої {bet} кг повернуто",
+    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
+    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
                                                  bet=callback_data.bet).render())

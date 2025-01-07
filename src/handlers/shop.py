@@ -37,8 +37,8 @@ async def shop_how_to_buy(query: CallbackQuery):
     is_private = query.message.chat.type == "private"
     tb = TextBuilder()
     tb.add("Посилання на банку: {bank}", bank=TextLink("send.monobank.ua", url=config.DONATE))
-    tb.add("Робите донат на потрібну вам суму, і відправляєте скріншот оплати в @OnilyxeBot", new_line=True)
-    tb.add("Головна умова, вказати ID чату де ви хочете поповнення балансу. "
+    tb.add("Робите донат на потрібну вам суму, і відправляєте скріншот оплати в @k0k0sbot", new_line=True)
+    tb.add("Головна умова, вказати ID чату де ви хочете поповнення русофобії "
            "Якщо ти не знаєш що це таке, то просто напиши цю команду у потрібному чаті"
            if is_private else
            "ID цього чату: {chat_id}", new_line=True, chat_id=Code(query.message.chat.id))
@@ -55,7 +55,7 @@ async def shop_how_to_buy(query: CallbackQuery):
 async def shop_what_is_price(query: CallbackQuery):
     tb = TextBuilder()
     tb.add("Курс гривні до русофобії 1:10")
-    tb.add("1 грн = 10 кг", new_line=True)
+    tb.add("10 кг = 1 грн", new_line=True)
     tb.add("100 кг - 10 грн", new_line=True)
     tb.add("1000 кг - 100 грн", new_line=True)
     tb.add("Беремо потрібну кількість русофобії і ділимо на 10", new_line=True)
@@ -71,9 +71,9 @@ async def shop_what_is_price(query: CallbackQuery):
 @commands_router.callback_query(ShopCallback.filter((F.menu == ShopEnum.WHERE_MONEY_GO)))
 async def shop_where_money_go(query: CallbackQuery):
     tb = TextBuilder()
-    tb.add("Розробник бота зараз служить в артилерії. Їбашить кацапів щодня "
+    tb.add("Розробник бота зараз служить в зсу. Їбашить кацапів щодня "
            "(Його канал: {channel})", channel=TextLink("5011", url="https://t.me/ua5011"))
-    tb.add("Зібрані гроші підуть на поновлення екіпірування", new_line=True)
+    tb.add("Зібрані гроші підуть на допомогу розрахунку", new_line=True)
 
     kb = InlineKeyboardBuilder()
     back_button = InlineKeyboardButton(text="↩️ Назад", callback_data="back_to_shop")

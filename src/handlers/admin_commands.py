@@ -16,7 +16,7 @@ async def chatlist_command(message: types.Message, db: Database):
     chats = await db.chat.get_chats()
     tb = TextBuilder()
     if not chats:
-        tb.add("Бота не було додано до жодного чату. Нахуй я взагалі писав цього йобаного бота бляха")
+        tb.add("Нема ніхуя. Нахуй я взагалі писав цього йобаного раба")
     else:
         chat_list_lines = []
         removed_chats_info = []
@@ -31,13 +31,13 @@ async def chatlist_command(message: types.Message, db: Database):
                 chat_list_lines.append(f"🔹 {chat_id}, {chat_info.type}, {chat_info.title} {chat_username}")
             except TelegramAPIError as e:
                 removed_chats_count += 1
-                removed_chats_info.append(f"🔹 {chat_id} - вилучено ({e.message})")
+                removed_chats_info.append(f"🔹 {chat_id} - йобнуто ({e.message})")
                 await db.chat.remove_chat(chat_id)
 
-        tb.add("💬 Список чатів ({chats_count}):", chats_count=total_chats_count)
+        tb.add("💬 Чати ({chats_count}):", chats_count=total_chats_count)
         tb.add('\n'.join(chat_list_lines), new_line=True)
         if removed_chats_info:
-            tb.add("\n\n\n💢 Список вилучених чатів ({removed_chats_count}):", removed_chats_count=removed_chats_count)
+            tb.add("\n\n\n💢 Йобнуті ({removed_chats_count}):", removed_chats_count=removed_chats_count)
             tb.add('\n'.join(removed_chats_info), new_line=True)
 
     await reply_and_delete(message, tb.render())
@@ -47,7 +47,7 @@ async def chatlist_command(message: types.Message, db: Database):
 async def message_command(message: types.Message, command: CommandObject, db: Database):
     tb = TextBuilder()
     if not command.args:
-        tb.add("ℹ️ Розсилка повідомлень\n\n"
+        tb.add("ℹ️ Розсилка месседжів\n\n"
                "{example1} - в усі чати\n"
                "{example2} - в один чат",
                example1=Code("/message [text]"),
@@ -65,7 +65,7 @@ async def message_command(message: types.Message, command: CommandObject, db: Da
         text = " ".join(parts)
 
     if not text.strip():
-        tb.add("Ой блять ну і їблан як мені пустоту в чати розіслати?")
+        tb.add("Ой блять заїбав. Напиши текст якийсь")
         await reply_and_delete(message, tb.render())
         return
 
@@ -84,9 +84,9 @@ async def message_command(message: types.Message, command: CommandObject, db: Da
         except TelegramAPIError as e:
             error_messages += f"{chat[0]}: {e.message}\n"
 
-    tb.add("Усе зроблено, мій пане. Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
+    tb.add("Готово. Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
     if error_messages:
-        tb.add("\nПомилки:\n{error_messages}", error_messages=error_messages, new_line=True)
+        tb.add("\nЕррори:\n{error_messages}", error_messages=error_messages, new_line=True)
 
     await reply_and_delete(message, tb.render())
 
@@ -152,7 +152,7 @@ async def add_command(message: types.Message, db: Database, command: CommandObje
 
     current_value = (await db.chat_user.get_chat_user(chat_id, user_id))
     if current_value is None:
-        await reply_and_delete(message, "В очі не їбись. Я шота не бачу такого піздюка або чату")
+        await reply_and_delete(message, "В очі не їбись. Я шось не бачу такого піздюка або чату")
         return
     current_value = current_value[3]
     updated_value = current_value + value

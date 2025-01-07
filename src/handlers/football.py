@@ -20,7 +20,7 @@ from src.utils.utils import process_regular_bet
 async def football_command(message: types.Message, chat_user):
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
     kb.row(*get_bet_buttons(message.from_user.id, Games.FOOTBALL), width=2)
-    tb.add("⚽ {user}, я знав, що ти гомосек\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("⚽ {user} я знав що ти гей\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
            user=TextMention(message.from_user.first_name, user=message.from_user),
            balance=Code(chat_user[3]))
     await message.answer(tb.render(), reply_markup=kb.as_markup())
@@ -38,7 +38,7 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
     balance = chat_user[3]
     chat_id = callback.message.chat.id
     current_time = int(time.time())
-    await callback.message.edit_text(Text("⚽ Який шанс того, що цей м'яч побуде в тобі?").as_markdown())
+    await callback.message.edit_text(Text("⚽ Який шанс того, що цей м'яч був у твоїй мамі?").as_markdown())
 
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
     football_value = (await callback.message.reply_dice(emoji='⚽')).dice.value
@@ -48,13 +48,13 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
     if football_value in [3, 4, 5]:
         bet_won = math.ceil(callback_data.bet * 1.5)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, красава!")
-        tb.add("⚽ Ти виграв(ла): {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏆 {user}, пєрємога")
+        tb.add("⚽ Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
-        tb.add("😔 {user}, готуй дупу")
-        tb.add("⚽ Втрата: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("😔 {user} відсмоктав")
+        tb.add("⚽ Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
@@ -69,6 +69,6 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
 
 @games_router.callback_query(FootballCallback.filter(F.action == BaseGameEnum.CANCEL), IsCurrentUser(True))
 async def football_callback_bet_cancel(callback: types.CallbackQuery, callback_data: FootballCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Шльондра злилася..")
-    await callback.message.edit_text(TextBuilder("ℹ️ Гру скасовано. Твої {bet} кг повернуто",
+    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
+    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
                                                  bet=callback_data.bet).render())

@@ -13,7 +13,7 @@ async def setup_database():
 async def startup(bot: Bot):
     await setup_database()
     commands = [
-        types.BotCommand(command="/killru", description="підвищити свою русофобію"),
+        types.BotCommand(command="/killru", description="русофобія"),
         types.BotCommand(command="/my", description="моя русофобія"),
         types.BotCommand(command="/game", description="вбий москаля"),
         types.BotCommand(command="/dice", description="кинь кістки"),
@@ -29,16 +29,16 @@ async def startup(bot: Bot):
         types.BotCommand(command="/globaltop10", description="глобальний топ 10"),
         types.BotCommand(command="/globaltop", description="глобальний топ"),
         types.BotCommand(command="/leave", description="покинути гру"),
-        types.BotCommand(command="/about", description="про бота"),
-        types.BotCommand(command="/ping", description="статус бота"),
+        types.BotCommand(command="/about", description="про раба"),
+        types.BotCommand(command="/ping", description="статус раба"),
     ]
 
     config.set_commands([command.command for command in commands])
     await bot.set_my_commands(commands)
     if config.STATUS:
-        print("Бот запущений")
+        print("Раб запущений")
         try:
-            await bot.send_message(config.CHANNEL, f"🚀 Бот запущений")
+            await bot.send_message(config.CHANNEL, f"🚀 Раб запущений")
         except Exception as e:
             print(f"Старт error: {e}")
 
@@ -47,6 +47,6 @@ async def startup(bot: Bot):
 async def shutdown(bot: Bot):
     if config.STATUS:
         try:
-            await bot.send_message(config.CHANNEL, f"⛔️ Бот зупинений")
+            await bot.send_message(config.CHANNEL, f"⛔️ Раб зупинений")
         except Exception as e:
             print(f"Стоп error: {e}")
