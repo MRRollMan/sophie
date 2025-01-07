@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -48,6 +48,6 @@ async def settings_callback(query: CallbackQuery, callback_data: SettingsCallbac
 
     try:
         await query.message.edit_reply_markup(reply_markup=kb.as_markup())
-    except TelegramBadRequest:
+    except TelegramAPIError:
         pass
     await query.bot.answer_callback_query(query.id, "🔧 Налаштування змінено. Я пішла хапати")

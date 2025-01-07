@@ -1,7 +1,7 @@
 import time
 
 from aiogram import types, F
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandObject
 from aiogram.types import InlineKeyboardButton, CallbackQuery
 from aiogram.utils.formatting import Code, TextMention
@@ -10,7 +10,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from src.database import Database
 from src.filters import IsChat, IsCurrentUser, GiveFilter, CooldownFilter
 from src.handlers.commands import commands_router
-from src.types import (Actions, GiveCallback, GiveEnum)
+from src.types import Actions, GiveCallback, GiveEnum
 from src.utils import TextBuilder, reply_and_delete
 
 
@@ -83,7 +83,7 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
     try:
         await query.bot.answer_callback_query(query.id, "Хулі читаєш, лох")
         await query.message.edit_text(tb.render())
-    except TelegramBadRequest:
+    except TelegramAPIError:
         pass
     else:
         await db.cooldown.update_user_cooldown(query.message.chat.id, giver_id, Actions.GIVE, current_time)
