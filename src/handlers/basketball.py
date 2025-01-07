@@ -53,7 +53,7 @@ async def basketball_callback_bet_play(callback: types.CallbackQuery,
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
-        tb.add("😔 {user} відсмоктав)")
+        tb.add("😔 {user} відсмоктав")
         tb.add("🏀 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
         tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)

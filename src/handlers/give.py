@@ -77,7 +77,7 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
     tb = TextBuilder()
     tb.add("✅ {giver} передав {value} кг русофобії {receiver}.\n🏷️ Тепер в тебе: {new_value} кг",
            value=Code(value), new_value=Code(new_balance),
-           giver=TextMention(query.from_user.firОхорона скасуванняst_name, user=query.from_user),
+           giver=TextMention(query.from_user.first_name, user=query.from_user),
            receiver=TextMention(receiver.user.first_name, user=receiver.user))
 
     try:
