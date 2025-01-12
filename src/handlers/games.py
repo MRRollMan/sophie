@@ -16,7 +16,7 @@ games_router = Router(name="Games router")
 async def killru_command(message: types.Message, db: Database, chat_user):
     russophobia = 0
     while russophobia == 0:
-        russophobia = round(random.uniform(-50, 100))
+        russophobia = round(random.uniform(-500, 1000))
 
     new_russophobia = chat_user[3] + russophobia
     current_time = message.date.timestamp()

@@ -31,7 +31,7 @@ async def dice_command(message: types.Message, chat_user):
 async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     balance = chat_user[3]
     bet = callback_data.bet
-    potential_win = math.ceil(bet * 1.5)
+    potential_win = math.ceil(bet * 2)
     user = callback.from_user
 
     if not await is_can_play(balance, bet, callback):
@@ -67,16 +67,16 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
     tb = TextBuilder(user=user, dice_value=Code(dice_value), parity='парне' if not dice_value % 2 else 'непарне')
 
     if dice_value % 2 == parity:
-        bet_won = math.ceil(callback_data.bet * 1.5)
+        bet_won = math.ceil(callback_data.bet * 2)
         new_balance = balance + bet_won
         tb.add("🏆 {user}, пєрємога {dice_value}, {parity}")
         tb.add("🎲 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
         tb.add("😔 {user} відсмоктав {dice_value}, {parity}")
         tb.add("🎲 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
         await callback.bot.answer_callback_query(callback.id, "Навіщо придумали повітря, якщо є шмаль?")

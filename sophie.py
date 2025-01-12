@@ -4,6 +4,7 @@ import aiogram
 from aiogram import Bot, Dispatcher
 
 from src.config import Config
+from aiogram.client.default import DefaultBotProperties
 from src.functions import startup, shutdown
 from src.handlers import games_router, commands_router, admin_commands_router
 from src.logger import init_logger
@@ -14,7 +15,7 @@ from src.middliwares import LoggingMiddleware, DatabaseMiddleware, RegisterChatM
 config = Config()
 
 # Ініціалізація бота та диспетчера
-bot = Bot(config.TOKEN, parse_mode=aiogram.enums.ParseMode.MARKDOWN_V2)
+bot = Bot(config.TOKEN, default=DefaultBotProperties(parse_mode=aiogram.enums.ParseMode.MARKDOWN_V2))
 dp = Dispatcher()
 dp.message.outer_middleware(DatabaseMiddleware())
 dp.message.outer_middleware(LoggingMiddleware())

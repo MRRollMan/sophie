@@ -47,22 +47,40 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
     tb = TextBuilder(user=user)
 
     if casino_value == 64:
-        bet_won = math.ceil(callback_data.bet * 10)
+        bet_won = math.ceil(callback_data.bet * 50)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, потужно")
+        tb.add("🏆 {user}, ну ніхуя собі")
         tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
-    elif casino_value in [1, 22, 43]:
-        bet_won = math.ceil(callback_data.bet * 2)
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [43, 16, 32, 48]:
+        bet_won = math.ceil(callback_data.bet * 10)
         new_balance = balance + bet_won
         tb.add("🏆 {user}, пєрємога")
         tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value == 22:
+        bet_won = math.ceil(callback_data.bet * 5)
+        new_balance = balance + bet_won
+        tb.add("🏆 {user}, пєрємога")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [1, 11, 27, 59]:
+        bet_won = math.ceil(callback_data.bet * 2)
+        new_balance = balance + bet_won
+        tb.add("🏆 {user} пєрємога")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [4, 6, 8, 12, 17, 20, 24, 28, 33, 36, 38, 40, 44, 49, 52, 54, 56, 60]:
+        bet_won = math.ceil(callback_data.bet)
+        new_balance = balance
+        tb.add("🏆 {user} бля шо за рахіт грає")
+        tb.add("🎰 Ти повернув: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
         tb.add("😔 {user} відсмоктав")
         tb.add("🎰 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
         await callback.bot.answer_callback_query(callback.id, "Шишки шишки шишки шишки шишки")

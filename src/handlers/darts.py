@@ -45,16 +45,22 @@ async def darts_callback_bet_play(callback: types.CallbackQuery, callback_data: 
     tb = TextBuilder(user=user)
 
     if darts_value == 6:
-        bet_won = math.ceil(callback_data.bet * 1.5)
+        bet_won = math.ceil(callback_data.bet * 2)
         new_balance = balance + bet_won
         tb.add("🏆 {user}, пєрємога")
         tb.add("🎯 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif darts_value in [4, 5]:
+        bet_won = math.ceil(callback_data.bet)
+        new_balance = balance
+        tb.add("🏆 {user} бля шо за рахіт грає")
+        tb.add("🎯 Ти повернув: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
         tb.add("😔 {user} відсмоктав")
         tb.add("🎯 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
         await callback.bot.answer_callback_query(callback.id, "Кана́біс (лат. Cánnabis) — узагальнена назва, що об'єднує низку психоактивних речовин, одержуваних з частин квітучих рослин роду коноплі. Марихуа́на, гашиш і гашишне масло є прикладами таких засобів")

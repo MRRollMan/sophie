@@ -19,7 +19,7 @@ def get_bet_buttons(user_id: int, game: Games) -> list[InlineKeyboardButton]:
     BET_BUTTONS = [InlineKeyboardButton(
         text=str(bet),
         callback_data=BetCallback(user_id=user_id, bet=bet, action=BetButtonType.BET, game=game).pack()
-    ) for bet in [1, 5, 10, 20, 30, 40, 50, 100]]
+    ) for bet in [10, 50, 100, 200, 300, 400, 500, 1000]]
     BET_BUTTONS.append(
         InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
                                                                          action=BetButtonType.CANCEL, game=game).pack()

@@ -50,12 +50,12 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
         new_balance = balance + bet_won
         tb.add("🏆 {user}, пєрємога")
         tb.add("⚽ Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
         tb.add("😔 {user} відсмоктав")
         tb.add("⚽ Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
         await callback.bot.answer_callback_query(callback.id, "Не хапав, значить не жив")
