@@ -171,3 +171,29 @@ async def add_command(message: types.Message, db: Database, command: CommandObje
            user_id=Code(user_id),
            updated_value=Code(updated_value))
     await reply_and_delete(message, tb.render())
+
+@admin_commands_router.message(Command("photo"), or_f(IsSupport(), IsAdmin()))
+async def photo_command(message: types.Message, command: CommandObject):
+
+    tb = TextBuilder()
+    
+    parts = []
+    if command.args:
+        parts = command.args.split()
+        
+    if not command.args or len(parts) < 1:
+        tb.add("ℹ️ Хуйня йобана. Використовуй {example}",
+               example=Code("/photo file_id"))
+        await reply_and_delete(message, tb.render())
+        return
+
+    file_id = parts[0]
+
+    try:
+        await message.answer_photo(photo=file_id)
+    except Exception as e:
+        tb.add(f"{e}")
+        await reply_and_delete(message, tb.render())
+        return
+
+    await reply_and_delete(message, tb.render())
