@@ -20,7 +20,7 @@ bot_start_time = datetime.now()
 
 @commands_router.message(CommandStart())
 async def start(message: types.Message):
-    await message.reply(Text("Привіт заїбав. Я жива людина для гри в русофобію. Додавай мене в чат і кури шмаль, ну і в мене грай. Щоб дізнатися як, вивчай /help").as_markdown())
+    await message.reply(Text("Привіт хуйлопан. Я жива людина для гри в русофобію. Додавай мене в чат і кури шмаль, ой тобто в мене грай. Щоб дізнатися як, вивчай /help").as_markdown())
 
 
 @commands_router.message(Command("about"))
@@ -28,7 +28,7 @@ async def about(message: types.Message):
     tb = TextBuilder(
         version=Code(config.VERSION),
         news_channel=TextLink("News channel", url="t.me/sophie_tyt"),
-        source=TextLink("Source", url="https://github.com/onilyxe/Sofia"),
+        source=TextLink("Source", url="https://github.com/onilyxe/sophie"),
         onilyxe=TextLink("onilyxe", url="https://t.me/onilyxe"),
         uranium_depleter=TextLink("uranium depleter", url="https://t.me/j0egoldberg"),
         htivka=TextLink("хтивка", url="https://t.me/yeyevh")
@@ -36,7 +36,7 @@ async def about(message: types.Message):
     tb.add("📡 Sophie {version}\n", True)
     tb.add("{news_channel}", True)
     tb.add("{source}\n", True)
-    tb.add("Made {onilyxe}. Idea {uranium_depleter}. Updated {htivka}", True)
+    tb.add("Made {onilyxe}. Idea {uranium_depleter}. Updated and fixed {htivka}", True)
     await message.reply(tb.render())
 
 
@@ -49,7 +49,7 @@ async def my_command(message: types.Message, chat_user):
     if russophobia:
         tb.add("{user}, в тебе {russophobia} кг", russophobia=Code(russophobia))
     else:
-        tb.add("{user}, ти пограй для початку, і не роби так більше. Бо це безпосередньо показує твоє хуєве критичне мислення")
+        tb.add("{user} ти пограй для початку, і не роби так більше. Бо це безпосередньо показує твоє хуйовє критичне мислення")
     await message.reply(tb.render())
 
 
@@ -60,7 +60,7 @@ async def leave(message: types.Message, chat_user: list):
     tb, kb = TextBuilder(user=TextMention(user.first_name, user=user)), InlineKeyboardBuilder()
 
     if russophobia:
-        tb.add("{user}, значить так, ебаніно ти ебана. Якщо підеш із гри, то всі твої дані (зокрема точне місце проживання тебе і всіх твоїх рідних) буде передано поважним особам. Після натискання кнопки, протягом 120 хвилин до тебе приїдуть у гості")
+        tb.add("{user}, значить так, собака спідозна. Якщо підеш з гри, то всі твої дані (зокрема точне місце проживання тебе і всіх твоїх рідних) буде передано поважним особам. Після підтвердження, протягом 120 хвилин до тебе приїдуть у гості")
     else:
         tb.add("{user}, ти пограй для початку, і не роби так більше. Бо це безпосередньо показує твоє хуєве критичне мислення")
 
@@ -124,10 +124,10 @@ async def ping(message: types.Message, db: Database):
      .add("🔥 CPU: {cpu_usage}%", True, cpu_usage=Code(cpu_usage))
      .add("💾 RAM: {ram_usage}%", True, ram_usage=Code(ram_usage))
      .add("⏱️ Uptime: {formatted_uptime}\n", True, formatted_uptime=Code(formatted_uptime))
-     .add("📊 Кількість запитів:", True)
-     .add("{today}: {today_queries}", True, today=It("За сьогодні"), today_queries=Code(today_queries))
-     .add("{week}: {week_queries}", True, week=It("За тиждень"), week_queries=Code(week_queries))
-     .add("{all_time}: {all_time_queries}", True, all_time=It("За весь час"), all_time_queries=Code(all_time_queries))
+     .add("📊 Запити:", True)
+     .add("{today}: {today_queries}", True, today=It("Сьогодні"), today_queries=Code(today_queries))
+     .add("{week}: {week_queries}", True, week=It("Тиждень"), week_queries=Code(week_queries))
+     .add("{all_time}: {all_time_queries}", True, all_time=It("Всього"), all_time_queries=Code(all_time_queries))
      )
 
     await reply_and_delete(message, tb.render())

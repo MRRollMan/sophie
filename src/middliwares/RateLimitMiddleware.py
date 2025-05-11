@@ -3,6 +3,7 @@ import time
 from aiogram import BaseMiddleware
 from aiogram.types import Message, FSInputFile
 
+from src import config
 from src.utils import reply_voice_and_delete
 
 
@@ -16,6 +17,8 @@ class RateLimitMiddleware(BaseMiddleware):
         super().__init__()
 
     async def __call__(self, handler, event: Message, data):
+        if not config.is_command(event.text):
+            return await handler(event, data)
         user_id = event.from_user.id
         current_time = time.time()
 

@@ -1,7 +1,7 @@
 import time
 
 from aiogram import types, F
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandObject
 from aiogram.types import InlineKeyboardButton, CallbackQuery
 from aiogram.utils.formatting import Code, TextMention
@@ -10,7 +10,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from src.database import Database
 from src.filters import IsChat, IsCurrentUser, GiveFilter, CooldownFilter
 from src.handlers.commands import commands_router
-from src.types import (Actions, GiveCallback, GiveEnum)
+from src.types import Actions, GiveCallback, GiveEnum
 from src.utils import TextBuilder, reply_and_delete
 
 
@@ -23,11 +23,11 @@ async def give(message: types.Message, command: CommandObject, db: Database, cha
             or message.reply_to_message.from_user.is_bot
             or not args or len(args := args.split()) != 1
     ):
-        tb.add("Ну і баран. Приклад:  {cmd}. Не забудь про реплай", cmd=Code(f"/give N"))
+        tb.add("Ну і їблан. Приклад: {cmd}. Не забудь про реплай", cmd=Code(f"/give N"))
         await reply_and_delete(message, tb.render())
         return
     if not (value := args[0]).isdigit() or (value := int(value)) == 0:
-        tb.add("Гнида, йди нахуй")
+        tb.add("Гніда, йди нахуй")
         await reply_and_delete(message, tb.render())
         return
 
@@ -83,7 +83,7 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
     try:
         await query.bot.answer_callback_query(query.id, "Хулі читаєш, лох")
         await query.message.edit_text(tb.render())
-    except TelegramBadRequest:
+    except TelegramAPIError:
         pass
     else:
         await db.cooldown.update_user_cooldown(query.message.chat.id, giver_id, Actions.GIVE, current_time)
@@ -93,5 +93,5 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
 
 @commands_router.callback_query(GiveCallback.filter((F.action == GiveEnum.NO)), IsCurrentUser(True), )
 async def give_yes(query: CallbackQuery):
-    await query.bot.answer_callback_query(query.id, "Ой бляха заїбали передумувати..")
-    await query.message.edit_text("🔄 Охорона все скасувала")
+    await query.bot.answer_callback_query(query.id, "Хуйло злякалось.. ")
+    await query.message.edit_text("🔄 Ну ок хулі")

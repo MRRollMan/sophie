@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime, timedelta
 
 from aiogram import types
 from aiogram.enums import ChatType, ParseMode
@@ -9,7 +9,7 @@ from aiogram.utils.formatting import Code
 from src import config
 from src.database import Database
 from src.types import Games, Actions
-from src.utils import TextBuilder, get_time_until_midnight
+from src.utils import TextBuilder, get_time_until_midnight, get_time_until
 
 
 class CooldownFilter(BaseFilter):
@@ -18,6 +18,7 @@ class CooldownFilter(BaseFilter):
         self.cooldown_type = str(cooldown_type)
         self.send_answer = send_answer
 
+    # refactor it, please
     async def __call__(self, message: Message, db: Database):
         if config.TEST:
             return True
@@ -28,18 +29,25 @@ class CooldownFilter(BaseFilter):
             user_id = message.from_user.id
 
         cooldown = await db.cooldown.get_user_cooldown(message.chat.id, user_id, self.cooldown_type)
-        if cooldown is None:
+        if cooldown is None or cooldown[0] == 0:
             return True
-        last_game_date: date = date.fromtimestamp(cooldown[0])
-        message_date = date.fromtimestamp(message.date.timestamp())
-        result = last_game_date < message_date
+        last_game_date = datetime.fromtimestamp(cooldown[0])
+        message_date = datetime.fromtimestamp(message.date.timestamp())
+
+        if self.cooldown_type == Actions.GIVE:
+            result = last_game_date.date() < message_date.date()
+            next_time = get_time_until_midnight(message.date.timestamp())
+        else:
+            delta = 12 if self.cooldown_type == Games.KILLRU else 3
+            next_play = last_game_date + timedelta(hours=delta)
+            result = next_play < message_date
+            next_time = get_time_until(message.date.timestamp(), next_play.timestamp())
 
         if not result and self.send_answer:
-            time = get_time_until_midnight(message.date.timestamp())
-            text = "У тебе шо альцгеймер прогресує? Ти можеш грати тільки один раз на день.\nСпробуй через {ttp}" \
+            text = "У тебе шо альцгеймер? Хуйло, грай через {ttp}" \
                 if self.is_game \
-                else "Для довбанів кажу, ти ще не можеш передати русофобію.\nСпробуй через {ttp}"
-            text = TextBuilder(text, ttp=Code(time))
+                else "Їблан, ти ще не можеш передати русофобію.\nСпробуй через {ttp}"
+            text = TextBuilder(text, ttp=Code(next_time))
             await message.reply(text.render(ParseMode.MARKDOWN_V2))
         return result
 
@@ -88,5 +96,6 @@ class IsCurrentUser(BaseFilter):
     async def __call__(self, callback: types.CallbackQuery, callback_data):
         result = callback.from_user.id == callback_data.user_id
         if not result and self.send_callback:
-            await callback.bot.answer_callback_query(callback.id, "❌ Ці кнопочки не для тебе, пішов нахуй бидло йобане", show_alert=True)
+            await callback.bot.answer_callback_query(callback.id, "❌ Ці кноп0чки не для тебе, йди нахуй бидло йобане",
+                                                     show_alert=True)
         return result

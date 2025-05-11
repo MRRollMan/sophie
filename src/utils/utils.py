@@ -19,20 +19,28 @@ def get_bet_buttons(user_id: int, game: Games) -> list[InlineKeyboardButton]:
     BET_BUTTONS = [InlineKeyboardButton(
         text=str(bet),
         callback_data=BetCallback(user_id=user_id, bet=bet, action=BetButtonType.BET, game=game).pack()
-    ) for bet in [1, 5, 10, 20, 30, 40, 50, 100]]
+    ) for bet in [10, 50, 100, 200, 300, 400, 500, 1000]]
     BET_BUTTONS.append(
-        InlineKeyboardButton(text="❌ Злитися", callback_data=BetCallback(user_id=user_id, bet=0,
-                                                                       action=BetButtonType.CANCEL, game=game).pack()
+        InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
+                                                                         action=BetButtonType.CANCEL, game=game).pack()
                              )
     )
     return BET_BUTTONS
 
 
 # Отримання часу, який залишився до наступного дня
-def get_time_until_midnight(timestamp: int) -> str:
+def get_time_until_midnight(timestamp: int | float) -> str:
     dt = datetime.fromtimestamp(timestamp)
     midnight = datetime(dt.year, dt.month, dt.day) + timedelta(days=1)
-    remaining_time = midnight - dt
+    return get_time_until(timestamp, midnight.timestamp())
+
+
+def get_time_until(timestamp: int | float, timestamp2: int | float) -> str:
+    if timestamp >= timestamp2:
+        return "00:00:00"
+    dt = datetime.fromtimestamp(timestamp)
+    next_dt = datetime.fromtimestamp(timestamp2)
+    remaining_time = next_dt - dt
     hours, remainder = divmod(remaining_time.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     remaining_time_str = f"{hours:02}:{minutes:02}:{seconds:02}"
@@ -68,12 +76,12 @@ async def process_regular_bet(
     play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY)
     cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL)
 
-    kb.row(InlineKeyboardButton(text="▶️ Полетіли", callback_data=play.pack()),
-           InlineKeyboardButton(text="❌ Злитися", callback_data=cancel.pack()), width=1)
+    kb.row(InlineKeyboardButton(text="▶️ Ебаш", callback_data=play.pack()),
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
-    tb.add("{emoji} {user}, готовий(а) курва?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
-    tb.add("🏷️ Шо ти поставив: {bet} кг", True, bet=Code(bet))
-    tb.add("💰 Шо можеш виграти: {potential_win} кг", True, potential_win=potential_win)
+    tb.add("{emoji} {user}, готовий хуйло?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
+    tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
+    tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=potential_win)
 
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
@@ -133,7 +141,8 @@ def format_uptime(uptime):
 async def generate_top(message: types.Message, results: list[tuple[int, int]], title: str, is_global: bool) -> None:
     tb = TextBuilder()
     if not results:
-        await reply_and_delete(message, tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного бота бляха').render())
+        await reply_and_delete(message,
+                               tb.add('Ніхто не грав. Нахуй я взагалі писав цього йобаного раба').render())
     else:
         async def get_username(user_id):
             try:
@@ -155,8 +164,7 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
 
         total_kg = sum([value for _, value in results])
 
-        
-        tb.add(f'{title}:\n🎱 Усього: {total_kg} кг\n')
+        tb.add(f'{title}:\n🎱 Всього: {total_kg} кг\n')
         count = 0
         for user_name, (_, rusophobia) in zip(user_names, results):
             if user_name:
@@ -166,4 +174,3 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
                        **d)
 
         await reply_and_delete(message, tb.render())
-

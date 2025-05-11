@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -15,7 +15,7 @@ def get_settings_keyboard(minigames_enabled: bool, give_enabled: bool) -> Inline
     minigames_btn = SettingsCallback(setting=SettingsEnum.MINIGAMES)
     give_btn = SettingsCallback(setting=SettingsEnum.GIVE)
 
-    kb.row(InlineKeyboardButton(text=f"Міні-ігри: {'✅' if minigames_enabled else '❌'}",
+    kb.row(InlineKeyboardButton(text=f"Міні ігри: {'✅' if minigames_enabled else '❌'}",
                                 callback_data=minigames_btn.pack()),
            InlineKeyboardButton(text=f"Передача кг: {'✅' if give_enabled else '❌'}",
                                 callback_data=give_btn.pack()))
@@ -29,7 +29,7 @@ async def settings(message: types.Message, db: Database):
     give_enabled = bool(chat[2])
     kb = get_settings_keyboard(minigames_enabled, give_enabled)
 
-    await message.reply("🔧 Налаштування чату", reply_markup=kb.as_markup())
+    await message.reply("🔧 Параметри чату", reply_markup=kb.as_markup())
 
 
 @commands_router.callback_query(SettingsCallback.filter(), IsChatAdmin())
@@ -48,6 +48,6 @@ async def settings_callback(query: CallbackQuery, callback_data: SettingsCallbac
 
     try:
         await query.message.edit_reply_markup(reply_markup=kb.as_markup())
-    except TelegramBadRequest:
+    except TelegramAPIError:
         pass
-    await query.bot.answer_callback_query(query.id, "🔧 Налаштування змінено. Я пішла хапати")
+    await query.bot.answer_callback_query(query.id, "🔧 Змінено. Я пішла хапати")

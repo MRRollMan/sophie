@@ -35,7 +35,7 @@ class RegisterUserMiddleware(BaseMiddleware):
         user = await db.user.get_user(event.from_user.id)
         if not user:
             user = await db.user.add_user(event.from_user.id, event.from_user.username)
-            await event.reply(f"🥳 {event.from_user.mention_markdown()}, вітаю\\! Ти тепер граєш у русофобію")
+            await event.reply(f"🥳 {event.from_user.mention_markdown()}, хулі тобі треба\\. А, ладно, ти тепер граєш у русофобію")
 
         data["user"] = user
 

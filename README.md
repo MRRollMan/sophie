@@ -1,16 +1,16 @@
-# Sofia for Telegram
+# sophie for Telegram
 Розважальний бот
 
-[Спробуй мого бота](https://t.me/sofiarolbot)
+[Спробуй мого бота](https://t.me/s0phiebot)
 
 Встановлення
 ------------
 ```shell
 # Клонуй репозиторій
-$ git clone https://github.com/onilyxe/sofia.git
+$ git clone https://github.com/onilyxe/sophie.git
 
-# Змініть робочу директорію на sofia
-$ cd sofia
+# Змініть робочу директорію на sophie
+$ cd sophie
 ```
 
 Налаштування
@@ -75,5 +75,5 @@ DONATE = https://send.monobank.ua/0000000000
 $ python3 -m pip install -r requirements.txt
 
 # Запустити бота
-$ python3 sofia.py
+$ python3 sophie.py
 ```

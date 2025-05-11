@@ -22,7 +22,7 @@ from src.utils import TextBuilder, get_bet_buttons, is_can_play
 async def game_command(message: types.Message, chat_user):
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
     kb.row(*get_bet_buttons(message.from_user.id, Games.GAME), width=2)
-    tb.add("🧟‍♂️ {user}, знайди і вбий москаля\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🧟‍♂️ {user} бля дивлюся на тебе і ригати хочеться\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
            user=TextMention(message.from_user.first_name, user=message.from_user),
            balance=Code(chat_user[3]))
     await message.answer(tb.render(), reply_markup=kb.as_markup())
@@ -33,7 +33,7 @@ async def game_command(message: types.Message, chat_user):
 async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     balance = chat_user[3]
     bet = callback_data.bet
-    potential_win = math.ceil(bet * 1.5)
+    potential_win = math.ceil(bet * 2)
     user = callback.from_user
 
     if not await is_can_play(balance, bet, callback):
@@ -44,9 +44,9 @@ async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     cancel = GameCallback(user_id=user.id, bet=bet, cell=GameCellEnum.CANCEL)
 
     kb.row(*[InlineKeyboardButton(text="🧌", callback_data=cell.pack()) for cell in cells],
-           InlineKeyboardButton(text="❌ Злитися", callback_data=cancel.pack()), width=3)
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=3)
 
-    tb.add("🧟‍♂️ {user}, де москаль?\n", user=TextMention(user.first_name, user=user))
+    tb.add("🧟‍♂️ {user} а може ти москаль?\n", user=TextMention(user.first_name, user=user))
     tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
     tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
 
@@ -65,17 +65,19 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
     tb = TextBuilder(user=user)
 
     if win:
-        bet_won = math.ceil(callback_data.bet * 1.5)
+        bet_won = math.ceil(callback_data.bet * 2)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, красава! Ти знайшов і вбив москаля, з нього випало {bet_won} кг", bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏆 {user}, пєрємога")
+        tb.add("🧟‍♂️ Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
-        tb.add("😔 {user}, ну буває, шо поробиш {bet} кг", bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("😔 {user} відсмоктав")
+        tb.add("🧟‍♂️ Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
 
     try:
-        await callback.message.edit_text("🧌 Тикаємо палицею в москаля, здох чи не\\.\\.")
+        await callback.message.edit_text("🧌 Був до речі вночі в твоїй шафі\\.\\.")
         await asyncio.sleep(4)
         await callback.bot.answer_callback_query(callback.id, "Хапати і вбиває насправді весело")
         await callback.message.edit_text(tb.render())
@@ -88,6 +90,6 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
 
 @games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CANCEL), IsCurrentUser(True))
 async def game_callback_bet_cancel(callback: types.CallbackQuery, callback_data: GameCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Шльондра злилася..")
-    await callback.message.edit_text(TextBuilder("ℹ️ Гру скасовано. Твої {bet} кг повернуто",
+    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
+    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
                                                  bet=callback_data.bet).render())

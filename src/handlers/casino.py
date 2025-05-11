@@ -20,7 +20,7 @@ from src.utils.utils import process_regular_bet
 async def casino_command(message: types.Message, chat_user):
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
     kb.row(*get_bet_buttons(message.from_user.id, Games.CASINO), width=2)
-    tb.add("🎰 {user}, шо ти лудоман спідозний\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🎰 {user} шо ти, лудоман спідозний\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
            user=TextMention(message.from_user.first_name, user=message.from_user),
            balance=Code(chat_user[3]))
     await message.answer(tb.render(), reply_markup=kb.as_markup())
@@ -47,22 +47,40 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
     tb = TextBuilder(user=user)
 
     if casino_value == 64:
+        bet_won = math.ceil(callback_data.bet * 50)
+        new_balance = balance + bet_won
+        tb.add("🏆 {user}, ну ніхуя собі")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [43, 16, 32, 48]:
         bet_won = math.ceil(callback_data.bet * 10)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, ну ніхуя собі, джекпот")
-        tb.add("🎰 Ти виграв(ла): {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
-    elif casino_value in [1, 22, 43]:
+        tb.add("🏆 {user}, пєрємога")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value == 22:
+        bet_won = math.ceil(callback_data.bet * 5)
+        new_balance = balance + bet_won
+        tb.add("🏆 {user}, пєрємога")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [1, 11, 27, 59]:
         bet_won = math.ceil(callback_data.bet * 2)
         new_balance = balance + bet_won
-        tb.add("🏆 {user}, могло бути й краще")
-        tb.add("🎰 Ти виграв(ла): {bet_won} кг\n", True, bet_won=Code(bet_won))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("🏆 {user} пєрємога")
+        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+    elif casino_value in [4, 6, 8, 12, 17, 20, 24, 28, 33, 36, 38, 40, 44, 49, 52, 54, 56, 60]:
+        bet_won = math.ceil(callback_data.bet)
+        new_balance = balance
+        tb.add("🏆 {user} бля шо за рахіт грає")
+        tb.add("🎰 Ти повернув: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     else:
         new_balance = balance - callback_data.bet
-        tb.add("😔 {user}, поплач курво")
-        tb.add("🎰 Втрата: {bet} кг\n", True, bet=Code(callback_data.bet))
-        tb.add("🏷️ Тепер у тебе: {new_balance} кг", True, new_balance=Code(new_balance))
+        tb.add("😔 {user} відсмоктав")
+        tb.add("🎰 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(new_balance))
     await asyncio.sleep(4)
     try:
         await callback.bot.answer_callback_query(callback.id, "Шишки шишки шишки шишки шишки")
@@ -76,6 +94,6 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
 
 @games_router.callback_query(CasinoCallback.filter(F.action == BaseGameEnum.CANCEL), IsCurrentUser(True))
 async def casino_callback_bet_cancel(callback: types.CallbackQuery, callback_data: CasinoCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Шльондра злилася..")
-    await callback.message.edit_text(TextBuilder("ℹ️ Гру скасовано. Твої {bet} кг повернуто",
+    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
+    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
                                                  bet=callback_data.bet).render())
