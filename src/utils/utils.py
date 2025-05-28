@@ -6,8 +6,8 @@ from typing import Type
 from aiogram import types
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters.callback_data import CallbackData
-from aiogram.types import InlineKeyboardButton, User, InputFile
-from aiogram.utils.formatting import TextMention, Code, Text
+from aiogram.types import InlineKeyboardButton, User, InputFile, LinkPreviewOptions
+from aiogram.utils.formatting import TextLink, TextMention, Code, Text
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.config import config
@@ -86,10 +86,10 @@ async def process_regular_bet(
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
 
-async def reply_and_delete(message: types.Message, text: str | TextBuilder, reply_markup=None) -> None:
+async def reply_and_delete(message: types.Message, text: str | TextBuilder, reply_markup=None, **kwargs) -> None:
     if isinstance(text, TextBuilder):
         text = text.render()
-    reply = await message.reply(text, reply_markup=reply_markup)
+    reply = await message.reply(text, reply_markup=reply_markup, **kwargs)
     await asyncio.sleep(config.DELETE)
     try:
         await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
@@ -153,7 +153,7 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
                 else:
                     user_info = User(is_bot=False, **user_info.model_dump())
                 if user_info.username:
-                    return TextMention(user_info.first_name, user=user_info)
+                    return TextLink(user_info.first_name, url=f'https://t.me/{user_info.username}')
                 else:
                     return user_info.first_name
             except TelegramBadRequest:
@@ -173,4 +173,4 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
                 tb.add('{count_%(count)s}. {user_name_%(count)s}: {rusophobia_%(count)s} кг' % {"count": count}, True,
                        **d)
 
-        await reply_and_delete(message, tb.render())
+        await reply_and_delete(message, tb.render(), link_preview_options=LinkPreviewOptions(is_disabled=True))

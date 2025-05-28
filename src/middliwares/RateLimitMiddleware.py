@@ -17,7 +17,7 @@ class RateLimitMiddleware(BaseMiddleware):
         super().__init__()
 
     async def __call__(self, handler, event: Message, data):
-        if not config.is_command(event.text):
+        if not event.text or not config.is_command(event.text):
             return await handler(event, data)
         user_id = event.from_user.id
         current_time = time.time()
