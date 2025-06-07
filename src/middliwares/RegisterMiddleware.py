@@ -32,6 +32,10 @@ class RegisterUserMiddleware(BaseMiddleware):
         if not event.from_user:
             return await handler(event, data)
 
+        # Ignore bot and channel messages
+        if event.from_user.is_bot:
+            return
+
         user = await db.user.get_user(event.from_user.id)
         if not user:
             user = await db.user.add_user(event.from_user.id, event.from_user.username)
