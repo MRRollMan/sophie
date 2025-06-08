@@ -11,7 +11,7 @@ class CooldownRepository:
 
     async def get_user_cooldown(self, chat_id: int, user_id: int, cooldown_type: str | Games | None = None) -> list | None:
         if not cooldown_type:
-            cooldown = "*"
+            cooldown_type = "*"
 
         data = await self.connection.execute(f"SELECT {cooldown_type} FROM cooldowns INNER JOIN chat_users ON"
                                              f" chat_users.id = cooldowns.chat_user WHERE chat_users.chat_id = ? "

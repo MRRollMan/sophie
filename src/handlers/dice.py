@@ -10,19 +10,16 @@ from aiogram.utils.formatting import Text, Code, TextMention
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.database import Database
-from src.handlers.games import games_router
 from src.filters import CooldownFilter, IsChat, IsCurrentUser, GamesFilter
+from src.handlers.games import games_router
 from src.types import Games, BetButtonType, BetCallback, DiceCallback, DiceParityEnum
-from src.utils import TextBuilder, get_bet_buttons, is_can_play
+from src.utils import TextBuilder, is_can_play
+from src.utils.game_messages import get_dice_message
 
 
 @games_router.message(Command(Games.DICE), IsChat(), CooldownFilter(Games.DICE, True), GamesFilter())
 async def dice_command(message: types.Message, chat_user):
-    tb, kb = TextBuilder(), InlineKeyboardBuilder()
-    kb.row(*get_bet_buttons(message.from_user.id, Games.DICE), width=2)
-    tb.add("🎲 {user}, якщо програєш,\nто заплатиш адміну через /shop\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
-           user=TextMention(message.from_user.first_name, user=message.from_user),
-           balance=Code(chat_user[3]))
+    tb, kb = get_dice_message(chat_user, message.from_user)
     await message.answer(tb.render(), reply_markup=kb.as_markup())
 
 
@@ -40,11 +37,13 @@ async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
     even = DiceCallback(user_id=user.id, bet=bet, parity=DiceParityEnum.EVEN)
     odd = DiceCallback(user_id=user.id, bet=bet, parity=DiceParityEnum.ODD)
+    back = DiceCallback(user_id=user.id, bet=bet, parity=DiceParityEnum.BACK)
     cancel = DiceCallback(user_id=user.id, bet=bet, parity=DiceParityEnum.CANCEL)
 
     kb.row(InlineKeyboardButton(text="➗ Парне", callback_data=even.pack()),
-           InlineKeyboardButton(text="✖️ Непарне", callback_data=odd.pack()),
-           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=2)
+           InlineKeyboardButton(text="✖️ Непарне", callback_data=odd.pack()), width=2)
+    kb.row(InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
     tb.add("🎲 {user} сосав?\n", user=TextMention(user.first_name, user=user))
     tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
@@ -53,7 +52,7 @@ async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
 
-@games_router.callback_query(DiceCallback.filter(F.parity != DiceParityEnum.CANCEL), IsCurrentUser(True))
+@games_router.callback_query(DiceCallback.filter(F.parity.in_({DiceParityEnum.EVEN, DiceParityEnum.ODD})), IsCurrentUser(True))
 async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: DiceCallback, db: Database, chat_user):
     balance = chat_user[3]
     chat_id = callback.message.chat.id
@@ -86,10 +85,3 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
     else:
         await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.DICE, current_time)
         await db.chat_user.update_user_russophobia(chat_id, callback.from_user.id, new_balance)
-
-
-@games_router.callback_query(DiceCallback.filter(F.parity == DiceParityEnum.CANCEL), IsCurrentUser(True))
-async def dice_callback_bet_cancel(callback: types.CallbackQuery, callback_data: DiceCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
-    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
-                                                 bet=callback_data.bet).render())

@@ -57,7 +57,7 @@ async def is_can_play(balance: int, bet: int, callback: types.CallbackQuery) -> 
 
 async def process_regular_bet(
         callback: types.CallbackQuery, callback_data: BetCallback, chat_user,
-        callback_type: Type[CallbackData], emoji: str, wins_multiplies: int | float | list[int]
+        callback_type: Type[CallbackData], emoji: str, wins_multiplies: int | float | list[int], game: Games
 ) -> None:
     balance = chat_user[3]
     bet = callback_data.bet
@@ -73,10 +73,12 @@ async def process_regular_bet(
         return
 
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
-    play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY)
-    cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL)
+    play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY, game=game)
+    back = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.BACK, game=game)
+    cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL, game=game)
 
     kb.row(InlineKeyboardButton(text="▶️ Ебаш", callback_data=play.pack()),
+           InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
            InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
     tb.add("{emoji} {user}, готовий хуйло?\n", emoji=emoji, user=TextMention(user.first_name, user=user))

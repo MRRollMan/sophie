@@ -1,13 +1,15 @@
 import random
 
 from aiogram import Router, types, F
-from aiogram.filters import Command
+from aiogram.filters import Command, or_f
 from aiogram.utils.formatting import Code, TextMention
 
 from src.database import Database
 from src.filters import CooldownFilter, IsChat, IsCurrentUser
-from src.types import Games, BetButtonType, BetCallback
+from src.types import Games, BetButtonType, BetCallback, BaseGameCallback, BaseGameEnum, GameCallback, GameCellEnum, \
+    DiceCallback, DiceParityEnum
 from src.utils import TextBuilder, get_time_until_midnight
+from src.utils.back_button_process import process_back
 
 games_router = Router(name="Games router")
 
@@ -39,8 +41,27 @@ async def killru_command(message: types.Message, db: Database, chat_user):
     await message.answer(tb.render())
 
 
-@games_router.callback_query(BetCallback.filter(F.action == BetButtonType.CANCEL), IsCurrentUser(True))
-async def bet_callback_cancel(callback: types.CallbackQuery, callback_data: BetCallback):
+@games_router.callback_query(
+    or_f(
+        BetCallback.filter(F.action == BetButtonType.CANCEL),
+        BaseGameCallback.filter(F.action == BaseGameEnum.CANCEL),
+        GameCallback.filter(F.cell == GameCellEnum.CANCEL),
+        DiceCallback.filter(F.parity == DiceParityEnum.CANCEL)),
+    IsCurrentUser(True)
+)
+async def callback_cancel(callback: types.CallbackQuery, callback_data: BetCallback):
     await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
-    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
+    await callback.message.edit_text(TextBuilder(f"ℹ️ Хуйло злякалось. "
+                                                 f"Твої {"{bet} " if callback_data.bet > 0 else ""}кг повернуто",
                                                  bet=callback_data.bet).render())
+
+
+@games_router.callback_query(
+    or_f(
+        BaseGameCallback.filter(F.action == BaseGameEnum.BACK),
+        GameCallback.filter(F.cell == GameCellEnum.BACK),
+        DiceCallback.filter(F.parity == DiceParityEnum.BACK)),
+    IsCurrentUser(True)
+)
+async def callback_cancel(callback: types.CallbackQuery, callback_data: BaseGameCallback, chat_user):
+    await process_back(callback, callback_data, chat_user)
