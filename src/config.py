@@ -46,22 +46,27 @@ class Config(metaclass=SingletonMeta):
 
         except configparser.NoSectionError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sofia.py: Секцію "{e.section.upper()}" не знайдено'
+                f'Помилка завантаження конфігураційного файлу в sophie.py: Секцію "{e.section.upper()}" не знайдено'
             )
 
         except configparser.NoOptionError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sofia.py: Опцію "{e.option.upper()}" не знайдено'
+                f'Помилка завантаження конфігураційного файлу в sophie.py: Опцію "{e.option.upper()}" не знайдено'
             )
 
         except KeyError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sofia.py: Опцію "{e}" не знайдено'
+                f'Помилка завантаження конфігураційного файлу в sophie.py: Опцію "{e}" не знайдено'
             )
 
         except FileNotFoundError as e:
             logging.error(
-                f"Помилка завантаження конфігураційного файлу в sofia.py: {e}"
+                f"Помилка завантаження конфігураційного файлу в sophie.py: {e}"
+            )
+
+        except ValueError as e:
+            logging.error(
+                f"Помилка завантаження конфігураційного файлу в sophie.py: Неправильний формат значення - {e}"
             )
 
         else:

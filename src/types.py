@@ -20,6 +20,7 @@ class Actions(StrEnum):
 
 class BaseGameEnum(StrEnum):
     PLAY = "play"
+    BACK = "back"
     CANCEL = "cancel"
 
 
@@ -31,11 +32,13 @@ class BetButtonType(StrEnum):
 class DiceParityEnum(StrEnum):
     EVEN = "even"
     ODD = "odd"
+    BACK = "back"
     CANCEL = "cancel"
 
 
 class GameCellEnum(StrEnum):
     CELL = "cell"
+    BACK = "back"
     CANCEL = "cancel"
 
 
@@ -74,34 +77,11 @@ class DiceCallback(CallbackData, prefix="dice"):
     parity: DiceParityEnum
 
 
-class DartsCallback(CallbackData, prefix="darts"):
+class BaseGameCallback(CallbackData, prefix="games"):
     user_id: int
     bet: int
     action: BaseGameEnum
-
-
-class BowlingCallback(CallbackData, prefix="bowling"):
-    user_id: int
-    bet: int
-    action: BaseGameEnum
-
-
-class BasketballCallback(CallbackData, prefix="basketball"):
-    user_id: int
-    bet: int
-    action: BaseGameEnum
-
-
-class FootballCallback(CallbackData, prefix="football"):
-    user_id: int
-    bet: int
-    action: BaseGameEnum
-
-
-class CasinoCallback(CallbackData, prefix="casino"):
-    user_id: int
-    bet: int
-    action: BaseGameEnum
+    game: Games
 
 
 class LeaveCallback(CallbackData, prefix="leave"):

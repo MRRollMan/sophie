@@ -20,9 +20,11 @@ class CooldownFilter(BaseFilter):
 
     # refactor it, please
     async def __call__(self, message: Message, db: Database):
+        callback = False
         if config.TEST:
             return True
         if isinstance(message, types.CallbackQuery):
+            callback = True
             user_id = message.from_user.id
             message = message.message
         else:
@@ -48,7 +50,10 @@ class CooldownFilter(BaseFilter):
                 if self.is_game \
                 else "Їблан, ти ще не можеш передати русофобію.\nСпробуй через {ttp}"
             text = TextBuilder(text, ttp=Code(next_time))
-            await message.reply(text.render(ParseMode.MARKDOWN_V2))
+            if callback:
+                await message.edit_text(text.render(ParseMode.MARKDOWN_V2))
+            else:
+                await message.reply(text.render(ParseMode.MARKDOWN_V2))
         return result
 
 

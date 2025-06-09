@@ -1,4 +1,5 @@
 import asyncio
+import math
 from datetime import datetime, timedelta
 from math import ceil
 from typing import Type
@@ -15,17 +16,25 @@ from src.types import Games, BetButtonType, BetCallback, BaseGameEnum
 from src.utils import TextBuilder
 
 
-def get_bet_buttons(user_id: int, game: Games) -> list[InlineKeyboardButton]:
+def get_bet_buttons(user_id: int, game: Games, balance) -> InlineKeyboardBuilder:
+    kb = InlineKeyboardBuilder()
+    if balance < 800:
+        percentages = [0.01, 0.05, 0.10, 0.20, 0.35, 0.50, 0.65, 0.85, 1]
+    else:
+        percentages = [0.001, 0.002, 0.003, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03,
+                       0.035, 0.04, 0.045, 0.05, 0.10, 0.15, 0.30, 0.45, 0.65, 1]
     BET_BUTTONS = [InlineKeyboardButton(
-        text=str(bet),
-        callback_data=BetCallback(user_id=user_id, bet=bet, action=BetButtonType.BET, game=game).pack()
-    ) for bet in [10, 50, 100, 200, 300, 400, 500, 1000]]
-    BET_BUTTONS.append(
-        InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
-                                                                         action=BetButtonType.CANCEL, game=game).pack()
-                             )
-    )
-    return BET_BUTTONS
+        text=(f"{bet * 100:.1f}%" if math.fmod(bet * 100,
+                                               1) > 0 else f"{int(bet * 100)}%") + f" ({math.ceil(balance * bet)})",
+        callback_data=BetCallback(user_id=user_id, bet=math.ceil(balance * bet), action=BetButtonType.BET,
+                                  game=game).pack()
+    ) for bet in percentages]
+
+    kb.row(*BET_BUTTONS, width=3)
+    kb.row(InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
+                                                                          action=BetButtonType.CANCEL, game=game).pack()
+                                ))
+    return kb
 
 
 # Отримання часу, який залишився до наступного дня
@@ -57,7 +66,7 @@ async def is_can_play(balance: int, bet: int, callback: types.CallbackQuery) -> 
 
 async def process_regular_bet(
         callback: types.CallbackQuery, callback_data: BetCallback, chat_user,
-        callback_type: Type[CallbackData], emoji: str, wins_multiplies: int | float | list[int]
+        callback_type: Type[CallbackData], emoji: str, wins_multiplies: int | float | list[int], game: Games
 ) -> None:
     balance = chat_user[3]
     bet = callback_data.bet
@@ -73,10 +82,12 @@ async def process_regular_bet(
         return
 
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
-    play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY)
-    cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL)
+    play = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.PLAY, game=game)
+    back = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.BACK, game=game)
+    cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL, game=game)
 
     kb.row(InlineKeyboardButton(text="▶️ Ебаш", callback_data=play.pack()),
+           InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
            InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
     tb.add("{emoji} {user}, готовий хуйло?\n", emoji=emoji, user=TextMention(user.first_name, user=user))

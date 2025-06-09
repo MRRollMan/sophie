@@ -15,21 +15,18 @@ from src.database import Database
 from src.filters import CooldownFilter, IsChat, IsCurrentUser, GamesFilter
 from src.handlers.games import games_router
 from src.types import Games, BetButtonType, BetCallback, GameCallback, GameCellEnum
-from src.utils import TextBuilder, get_bet_buttons, is_can_play
+from src.utils import TextBuilder, is_can_play
+from src.utils.game_messages import get_game_message
 
 
 @games_router.message(Command(Games.GAME), IsChat(), CooldownFilter(Games.GAME, True), GamesFilter())
 async def game_command(message: types.Message, chat_user):
-    tb, kb = TextBuilder(), InlineKeyboardBuilder()
-    kb.row(*get_bet_buttons(message.from_user.id, Games.GAME), width=2)
-    tb.add("🧟‍♂️ {user} бля дивлюся на тебе і ригати хочеться\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
-           user=TextMention(message.from_user.first_name, user=message.from_user),
-           balance=Code(chat_user[3]))
+    tb, kb = get_game_message(chat_user, message.from_user)
     await message.answer(tb.render(), reply_markup=kb.as_markup())
 
 
 @games_router.callback_query(BetCallback.filter((F.action == BetButtonType.BET) & (F.game == Games.GAME)),
-                             IsCurrentUser(True))
+                             IsCurrentUser(True), CooldownFilter(Games.GAME, True))
 async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     balance = chat_user[3]
     bet = callback_data.bet
@@ -41,10 +38,12 @@ async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
 
     tb, kb = TextBuilder(), InlineKeyboardBuilder()
     cells = [GameCallback(user_id=user.id, bet=bet, cell=GameCellEnum.CELL) for _ in range(9)]
+    back = GameCallback(user_id=user.id, bet=bet, cell=GameCellEnum.BACK)
     cancel = GameCallback(user_id=user.id, bet=bet, cell=GameCellEnum.CANCEL)
 
-    kb.row(*[InlineKeyboardButton(text="🧌", callback_data=cell.pack()) for cell in cells],
-           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=3)
+    kb.row(*[InlineKeyboardButton(text="🧌", callback_data=cell.pack()) for cell in cells], width=3)
+    kb.row(InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
+           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
 
     tb.add("🧟‍♂️ {user} а може ти москаль?\n", user=TextMention(user.first_name, user=user))
     tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
@@ -53,12 +52,14 @@ async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
 
-@games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CELL), IsCurrentUser(True))
+@games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CELL), IsCurrentUser(True),
+                             CooldownFilter(Games.GAME, True))
 async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: GameCallback, db: Database, chat_user):
     balance = chat_user[3]
     chat_id = callback.message.chat.id
     current_time = int(time.time())
 
+    await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.GAME, current_time)
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
     win = random.random() < config.RANDOMGAMES
 
@@ -84,12 +85,4 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
     except TelegramRetryAfter:
         pass
     else:
-        await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.GAME, current_time)
         await db.chat_user.update_user_russophobia(chat_id, callback.from_user.id, new_balance)
-
-
-@games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CANCEL), IsCurrentUser(True))
-async def game_callback_bet_cancel(callback: types.CallbackQuery, callback_data: GameCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
-    await callback.message.edit_text(TextBuilder("ℹ️ Хуйло злякалось. Твої {bet} кг повернуто",
-                                                 bet=callback_data.bet).render())
