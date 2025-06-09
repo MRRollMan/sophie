@@ -92,6 +92,6 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
 
 
 @commands_router.callback_query(GiveCallback.filter((F.action == GiveEnum.NO)), IsCurrentUser(True), )
-async def give_yes(query: CallbackQuery):
+async def give_no(query: CallbackQuery):
     await query.bot.answer_callback_query(query.id, "Хуйло злякалось.. ")
     await query.message.edit_text("🔄 Ну ок хулі")

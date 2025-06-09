@@ -26,7 +26,7 @@ async def game_command(message: types.Message, chat_user):
 
 
 @games_router.callback_query(BetCallback.filter((F.action == BetButtonType.BET) & (F.game == Games.GAME)),
-                             IsCurrentUser(True))
+                             IsCurrentUser(True), CooldownFilter(Games.GAME, True))
 async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     balance = chat_user[3]
     bet = callback_data.bet
@@ -52,12 +52,14 @@ async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
 
-@games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CELL), IsCurrentUser(True))
+@games_router.callback_query(GameCallback.filter(F.cell == GameCellEnum.CELL), IsCurrentUser(True),
+                             CooldownFilter(Games.GAME, True))
 async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: GameCallback, db: Database, chat_user):
     balance = chat_user[3]
     chat_id = callback.message.chat.id
     current_time = int(time.time())
 
+    await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.GAME, current_time)
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
     win = random.random() < config.RANDOMGAMES
 
@@ -83,5 +85,4 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
     except TelegramRetryAfter:
         pass
     else:
-        await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.GAME, current_time)
         await db.chat_user.update_user_russophobia(chat_id, callback.from_user.id, new_balance)

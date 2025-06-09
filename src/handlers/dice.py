@@ -24,7 +24,7 @@ async def dice_command(message: types.Message, chat_user):
 
 
 @games_router.callback_query(BetCallback.filter((F.action == BetButtonType.BET) & (F.game == Games.DICE)),
-                             IsCurrentUser(True))
+                             IsCurrentUser(True), CooldownFilter(Games.DICE, True))
 async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     balance = chat_user[3]
     bet = callback_data.bet
@@ -52,11 +52,14 @@ async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
 
 
-@games_router.callback_query(DiceCallback.filter(F.parity.in_({DiceParityEnum.EVEN, DiceParityEnum.ODD})), IsCurrentUser(True))
+@games_router.callback_query(DiceCallback.filter(F.parity.in_({DiceParityEnum.EVEN, DiceParityEnum.ODD})),
+                             IsCurrentUser(True), CooldownFilter(Games.DICE, True))
 async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: DiceCallback, db: Database, chat_user):
     balance = chat_user[3]
     chat_id = callback.message.chat.id
     current_time = int(time.time())
+
+    await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.DICE, current_time)
     await callback.message.edit_text(Text("🎲 Кумедний факт хто кістки: Ти довбойоб").as_markdown())
 
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
@@ -83,5 +86,4 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
     except TelegramRetryAfter:
         pass
     else:
-        await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.DICE, current_time)
         await db.chat_user.update_user_russophobia(chat_id, callback.from_user.id, new_balance)

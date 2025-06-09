@@ -23,18 +23,20 @@ async def bowling_command(message: types.Message, chat_user):
 
 
 @games_router.callback_query(BetCallback.filter((F.action == BetButtonType.BET) & (F.game == Games.BOWLING)),
-                             IsCurrentUser(True))
+                             IsCurrentUser(True), CooldownFilter(Games.BOWLING, True))
 async def bowling_callback_bet(callback: types.CallbackQuery, callback_data: BetCallback, chat_user):
     await process_regular_bet(callback, callback_data, chat_user, BaseGameCallback, "🎳", 2, Games.BOWLING)
 
 
 @games_router.callback_query(BaseGameCallback.filter((F.action == BaseGameEnum.PLAY) & (F.game == Games.BOWLING)),
-                             IsCurrentUser(True))
+                             IsCurrentUser(True), CooldownFilter(Games.BOWLING, True))
 async def bowling_callback_bet_play(callback: types.CallbackQuery,
                                     callback_data: BaseGameCallback, db: Database, chat_user):
     balance = chat_user[3]
     chat_id = callback.message.chat.id
     current_time = int(time.time())
+
+    await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.BOWLING, current_time)
     await callback.message.edit_text(Text("🎳 Опускаю мокрий. А бля це хуйло грає, ща..").as_markdown())
 
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
@@ -72,5 +74,4 @@ async def bowling_callback_bet_play(callback: types.CallbackQuery,
     except TelegramRetryAfter:
         pass
     else:
-        await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.BOWLING, current_time)
         await db.chat_user.update_user_russophobia(chat_id, callback.from_user.id, new_balance)

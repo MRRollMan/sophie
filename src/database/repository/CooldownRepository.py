@@ -30,3 +30,4 @@ class CooldownRepository:
         await self.connection.execute(f"UPDATE cooldowns SET {cooldown_type} = ? WHERE chat_user = "
                                       f"(SELECT id FROM chat_users WHERE chat_id = ? AND user_id = ?)",
                                       (new_cooldown, chat_id, user_id))
+        await self.connection.commit()
