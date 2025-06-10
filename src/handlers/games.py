@@ -20,16 +20,15 @@ async def killru_command(message: types.Message, db: Database, chat_user):
     while russophobia == 0:
         russophobia = round(random.uniform(-500, 1000))
 
-    new_russophobia = chat_user[3] + russophobia
     current_time = message.date.timestamp()
 
     await db.cooldown.update_user_cooldown(message.chat.id, message.from_user.id, Games.KILLRU, current_time)
-    await db.chat_user.update_user_russophobia(message.chat.id, message.from_user.id, new_russophobia)
+    await db.chat_user.add_user_russophobia(message.chat.id, message.from_user.id, russophobia)
 
     tb = TextBuilder(
         user=TextMention(message.from_user.first_name, user=message.from_user),
         ttp=Code(get_time_until_midnight(current_time)),
-        new_russophobia=Code(new_russophobia),
+        new_russophobia=Code(chat_user[3] + russophobia),
         russophobia=Code(abs(russophobia))
     )
     if russophobia > 0:
