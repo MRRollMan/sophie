@@ -68,13 +68,18 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
     giver_id = callback_data.user_id
     receiver_id = callback_data.receiver_id
     value = callback_data.value
-    receiver_balance = callback_data.receiver_balance
     new_balance = chat_user[3] - value
 
     current_time = int(time.time())
 
     receiver = await query.bot.get_chat_member(query.message.chat.id, receiver_id)
     tb = TextBuilder()
+
+    if chat_user[3] < value:
+        tb.add("ℹ️ У тебе {russophobia} кг. Бомжара ахахахха", russophobia=Code(chat_user[3][3] if chat_user else 0))
+        await query.message.edit_text(tb.render())
+        return
+
     tb.add("✅ {giver} передав {value} кг русофобії {receiver}.\n🏷️ Тепер в тебе: {new_value} кг",
            value=Code(value), new_value=Code(new_balance),
            giver=TextMention(query.from_user.first_name, user=query.from_user),
@@ -87,8 +92,8 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
         pass
     else:
         await db.cooldown.update_user_cooldown(query.message.chat.id, giver_id, Actions.GIVE, current_time)
-        await db.chat_user.update_user_russophobia(query.message.chat.id, receiver_id, receiver_balance + value)
-        await db.chat_user.update_user_russophobia(query.message.chat.id, giver_id, new_balance)
+        await db.chat_user.add_user_russophobia(query.message.chat.id, receiver_id, value)
+        await db.chat_user.remove_user_russophobia(query.message.chat.id, giver_id, value)
 
 
 @commands_router.callback_query(GiveCallback.filter((F.action == GiveEnum.NO)), IsCurrentUser(True), )

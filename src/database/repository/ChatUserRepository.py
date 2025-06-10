@@ -30,6 +30,18 @@ class ChatUserRepository:
             (russophobia, chat_id, user_id))
         await self.connection.commit()
 
+    async def add_user_russophobia(self, chat_id: int, user_id: int, amount: int) -> None:
+        data: Row = await self.connection.execute(
+            "UPDATE chat_users SET russophobia = russophobia + ? WHERE chat_id = ? AND user_id = ?",
+            (amount, chat_id, user_id))
+        await self.connection.commit()
+
+    async def remove_user_russophobia(self, chat_id: int, user_id: int, amount: int) -> None:
+        data: Row = await self.connection.execute(
+            "UPDATE chat_users SET russophobia = russophobia - ? WHERE chat_id = ? AND user_id = ?",
+            (amount, chat_id, user_id))
+        await self.connection.commit()
+
     async def get_chat_top(self, chat_id: int, limit: int = 101) -> Iterable[Row]:
         data: Cursor = await self.connection.execute(
             'SELECT user_id, russophobia FROM chat_users WHERE chat_id = ? AND russophobia != 0 ORDER BY russophobia '

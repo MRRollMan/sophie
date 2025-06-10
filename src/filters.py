@@ -8,7 +8,7 @@ from aiogram.utils.formatting import Code
 
 from src import config
 from src.database import Database
-from src.types import Games, Actions
+from src.types import Games, Actions, BetCallback, BaseGameCallback
 from src.utils import TextBuilder, get_time_until_midnight, get_time_until
 
 
@@ -55,6 +55,15 @@ class CooldownFilter(BaseFilter):
             else:
                 await message.reply(text.render(ParseMode.MARKDOWN_V2))
         return result
+
+
+class BetFilter(BaseFilter):
+    async def __call__(self, callback: types.CallbackQuery, callback_data: BetCallback | BaseGameCallback, db: Database):
+        chat_user = await db.chat_user.get_chat_user(callback.message.chat.id, callback.from_user.id)
+        if callback_data.bet > chat_user[3]:
+            await callback.message.edit_text(TextBuilder("Пішов нахуй бомжара. Зароби спочатку русофобію").render())
+            return False
+        return True
 
 
 class GamesFilter(BaseFilter):
