@@ -46,9 +46,9 @@ class CooldownFilter(BaseFilter):
             next_time = get_time_until(message.date.timestamp(), next_play.timestamp())
 
         if not result and self.send_answer:
-            text = "У тебе шо альцгеймер? Хуйло, грай через {ttp}" \
+            text = "⏰ У тебе шо альцгеймер? Спробуй через {ttp}" \
                 if self.is_game \
-                else "Їблан, ти ще не можеш передати русофобію.\nСпробуй через {ttp}"
+                else "⏰ Єблан, в тебе кулдаун. Спробуй через {ttp}"
             text = TextBuilder(text, ttp=Code(next_time))
             if callback:
                 await message.edit_text(text.render(ParseMode.MARKDOWN_V2))
@@ -61,7 +61,7 @@ class BetFilter(BaseFilter):
     async def __call__(self, callback: types.CallbackQuery, callback_data: BetCallback | BaseGameCallback, db: Database):
         chat_user = await db.chat_user.get_chat_user(callback.message.chat.id, callback.from_user.id)
         if callback_data.bet > chat_user[3]:
-            await callback.message.edit_text(TextBuilder("Пішов нахуй бомжара. Зароби спочатку русофобію").render())
+            await callback.message.edit_text(TextBuilder("🫵😂 Пішов нахуй, бомж. Зароби спочатку русофобію").render())
             return False
         return True
 
@@ -110,6 +110,6 @@ class IsCurrentUser(BaseFilter):
     async def __call__(self, callback: types.CallbackQuery, callback_data):
         result = callback.from_user.id == callback_data.user_id
         if not result and self.send_callback:
-            await callback.bot.answer_callback_query(callback.id, "❌ Ці кноп0чки не для тебе, йди нахуй бидло йобане",
+            await callback.bot.answer_callback_query(callback.id, "⚠️ Ці кноп0чки не для тебе, йди нахуй піздота йобана",
                                                      show_alert=True)
         return result

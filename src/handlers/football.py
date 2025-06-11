@@ -38,7 +38,7 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
 
     await db.chat_user.remove_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
     await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.FOOTBALL, current_time)
-    await callback.message.edit_text(Text("⚽ Який шанс того, що цей м'яч був у твоїй мамі?").as_markdown())
+    await callback.message.edit_text(Text("⚽ Забиваю м'яч\\.\\.").as_markdown())
 
     balance -= callback_data.bet
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
@@ -50,16 +50,16 @@ async def football_callback_bet_play(callback: types.CallbackQuery,
         bet_won = math.ceil(callback_data.bet * 1.5)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, пєрємога")
-        tb.add("⚽ Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("⚽ {user} переміг")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     else:
-        tb.add("😔 {user} відсмоктав")
-        tb.add("⚽ Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("⚽ {user} програв")
+        tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 
-    tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(balance))
+    tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
     await asyncio.sleep(4)
     try:
-        await callback.bot.answer_callback_query(callback.id, "Не хапав, значить не жив")
+        await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
         await callback.message.edit_text(tb.render())
     except TelegramRetryAfter:
         pass

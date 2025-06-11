@@ -18,7 +18,7 @@ games_router = Router(name="Games router")
 async def killru_command(message: types.Message, db: Database, chat_user):
     russophobia = 0
     while russophobia == 0:
-        russophobia = round(random.uniform(-500, 1000))
+        russophobia = round(random.uniform(-500, 1500))
 
     current_time = message.date.timestamp()
 
@@ -32,10 +32,10 @@ async def killru_command(message: types.Message, db: Database, chat_user):
         russophobia=Code(abs(russophobia))
     )
     if russophobia > 0:
-        tb.add("📈 {user} ну норм, +{russophobia} кг")
+        tb.add("📈 {user}, +{russophobia} кг")
     else:
-        tb.add("📉 {user} соси, -{russophobia} кг")
-    tb.add("🏷️ Тепер в тебе: {new_russophobia} кг\n⏱ Продовжуй через {ttp}", True)
+        tb.add("📉 {user}, -{russophobia} кг")
+    tb.add("👛 Баланс: {new_russophobia} кг\n⏰ Продовжуй через {ttp}", True)
 
     await message.answer(tb.render())
 
@@ -49,9 +49,9 @@ async def killru_command(message: types.Message, db: Database, chat_user):
     IsCurrentUser(True)
 )
 async def callback_cancel(callback: types.CallbackQuery, callback_data: BetCallback):
-    await callback.bot.answer_callback_query(callback.id, "ℹ️ Хуйло злякалось")
-    await callback.message.edit_text(TextBuilder(f"ℹ️ Хуйло злякалось. "
-                                                 f"Твої {"{bet} " if callback_data.bet > 0 else ""}кг повернуто",
+    await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
+    await callback.message.edit_text(TextBuilder(f"⚠️ Лох злякався. "
+                                                 f"{"{bet} " if callback_data.bet > 0 else ""}кг повернуто",
                                                  bet=callback_data.bet).render())
 
 

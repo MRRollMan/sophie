@@ -25,7 +25,7 @@ class Config(metaclass=SingletonMeta):
         try:
             self._config = configparser.ConfigParser()
             if not self._config.read("config.ini"):
-                raise FileNotFoundError("Файл конфігурацій не знайдено")
+                raise FileNotFoundError("Конфіг файл не знайдено")
 
             self.TOKEN = self._config.get("TOKEN", "BOT")
             self.SKIPUPDATES = self._config.getboolean("SETTINGS", "SKIPUPDATES")
@@ -46,27 +46,27 @@ class Config(metaclass=SingletonMeta):
 
         except configparser.NoSectionError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sophie.py: Секцію "{e.section.upper()}" не знайдено'
+                f'Помилка завантаження конфігу: Секцію "{e.section.upper()}" не знайдено'
             )
 
         except configparser.NoOptionError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sophie.py: Опцію "{e.option.upper()}" не знайдено'
+                f'Помилка завантаження конфігу: Опцію "{e.option.upper()}" не знайдено'
             )
 
         except KeyError as e:
             logging.error(
-                f'Помилка завантаження конфігураційного файлу в sophie.py: Опцію "{e}" не знайдено'
+                f'Помилка завантаження конфігу: Опцію "{e}" не знайдено'
             )
 
         except FileNotFoundError as e:
             logging.error(
-                f"Помилка завантаження конфігураційного файлу в sophie.py: {e}"
+                f"Помилка завантаження конфігу: {e}"
             )
 
         except ValueError as e:
             logging.error(
-                f"Помилка завантаження конфігураційного файлу в sophie.py: Неправильний формат значення - {e}"
+                f"Помилка завантаження конфігу: Неправильний формат значення - {e}"
             )
 
         else:

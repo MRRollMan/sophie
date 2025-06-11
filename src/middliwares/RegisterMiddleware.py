@@ -13,7 +13,7 @@ class RegisterChatMiddleware(BaseMiddleware):
                        ):
         db: Database | None = data.get("db", None)
         if db is None:
-            raise Exception("Database Not Found")
+            raise Exception("БД не знайдено")
 
         chat = await db.chat.get_chat(event.chat.id)
         if event.chat.type in [ChatType.GROUP, ChatType.SUPERGROUP] and not chat:
@@ -28,7 +28,7 @@ class RegisterUserMiddleware(BaseMiddleware):
                        ):
         db: Database | None = data.get("db", None)
         if db is None:
-            raise Exception("Database Not Found")
+            raise Exception("БД не знайдено")
         if not event.from_user:
             return await handler(event, data)
 
@@ -39,7 +39,7 @@ class RegisterUserMiddleware(BaseMiddleware):
         user = await db.user.get_user(event.from_user.id)
         if not user:
             user = await db.user.add_user(event.from_user.id, event.from_user.username)
-            await event.reply(f"🥳 {event.from_user.mention_markdown()}, хулі тобі треба\\. А, ладно, ти тепер граєш у русофобію")
+            await event.reply(f"👋 {event.from_user.mention_markdown()}, вітаю\\. Підтримка: @k0k0sbot")
 
         data["user"] = user
 

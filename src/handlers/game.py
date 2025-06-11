@@ -42,11 +42,11 @@ async def game_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
     cancel = GameCallback(user_id=user.id, bet=bet, cell=GameCellEnum.CANCEL)
 
     kb.row(*[InlineKeyboardButton(text="🧌", callback_data=cell.pack()) for cell in cells], width=3)
-    kb.row(InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
-           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
+    kb.row(InlineKeyboardButton(text="↩️ Назад", callback_data=back.pack()),
+           InlineKeyboardButton(text="⛔️ Нахуй", callback_data=cancel.pack()), width=1)
 
-    tb.add("🧟‍♂️ {user} а може ти москаль?\n", user=TextMention(user.first_name, user=user))
-    tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
+    tb.add("🧌 {user}, граємо?\n", user=TextMention(user.first_name, user=user))
+    tb.add("🪙 Ставка: {bet} кг", True, bet=Code(bet))
     tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
 
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
@@ -72,18 +72,18 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
         bet_won = math.ceil(callback_data.bet * 2)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, пєрємога")
-        tb.add("🧟‍♂️ Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🧌 {user} переміг")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     else:
-        tb.add("😔 {user} відсмоктав")
-        tb.add("🧟‍♂️ Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🧌 {user} програв")
+        tb.add("📉 Ти проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 
-    tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(balance))
+    tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
 
     try:
-        await callback.message.edit_text("🧌 Був до речі вночі в твоїй шафі\\.\\.")
+        await callback.message.edit_text("🧌 Перевіряю\\.\\.")
         await asyncio.sleep(4)
-        await callback.bot.answer_callback_query(callback.id, "Хапати і вбиває насправді весело")
+        await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
         await callback.message.edit_text(tb.render())
     except TelegramRetryAfter:
         pass

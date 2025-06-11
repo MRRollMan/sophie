@@ -16,9 +16,9 @@ def get_shop_keyboard():
     what_is_price_btn = ShopCallback(menu=ShopEnum.WHAT_IS_PRICE)
     where_money_go_btn = ShopCallback(menu=ShopEnum.WHERE_MONEY_GO)
 
-    kb.row(InlineKeyboardButton(text="❔ Як купити кг?", callback_data=how_to_buy_btn.pack()))
+    kb.row(InlineKeyboardButton(text="❔ Як купити?", callback_data=how_to_buy_btn.pack()))
     kb.row(InlineKeyboardButton(text="💲 Яка ціна?", callback_data=what_is_price_btn.pack()))
-    kb.row(InlineKeyboardButton(text="🛸 Куди підуть гроші?", callback_data=where_money_go_btn.pack()))
+    kb.row(InlineKeyboardButton(text="💳 Куди підуть гроші?", callback_data=where_money_go_btn.pack()))
 
     return kb
 
@@ -37,7 +37,7 @@ async def shop_how_to_buy(query: CallbackQuery):
     is_private = query.message.chat.type == "private"
     tb = TextBuilder()
     tb.add("Посилання на банку: {bank}", bank=TextLink("send.monobank.ua", url=config.DONATE))
-    tb.add("Робите донат на потрібну вам суму, і відправляєте скріншот оплати в @k0k0sbot", new_line=True)
+    tb.add("Робите донат на потрібну вам суму, і відправляєте скрін сплати в @k0k0sbot", new_line=True)
     tb.add("Головна умова, вказати ID чату де ви хочете поповнення русофобії "
            "Якщо ти не знаєш що це таке, то просто напиши цю команду у потрібному чаті"
            if is_private else
@@ -55,11 +55,11 @@ async def shop_how_to_buy(query: CallbackQuery):
 async def shop_what_is_price(query: CallbackQuery):
     tb = TextBuilder()
     tb.add("Курс гривні до русофобії 1:10")
-    tb.add("10 кг = 1 грн", new_line=True)
-    tb.add("100 кг - 10 грн", new_line=True)
-    tb.add("1000 кг - 100 грн", new_line=True)
-    tb.add("Беремо потрібну кількість русофобії і ділимо на 10", new_line=True)
-    tb.add("500 кг / 10 = 50 грн", new_line=True)
+    tb.add("100 кг = 1 грн", new_line=True)
+    tb.add("1000 кг - 10 грн", new_line=True)
+    tb.add("10000 кг - 100 грн", new_line=True)
+    tb.add("Беремо потрібну кількість русофобії і ділимо на 100", new_line=True)
+    tb.add("5000 кг / 10 = 50 грн", new_line=True)
 
     kb = InlineKeyboardBuilder()
     back_button = InlineKeyboardButton(text="↩️ Назад", callback_data="back_to_shop")
@@ -71,9 +71,9 @@ async def shop_what_is_price(query: CallbackQuery):
 @commands_router.callback_query(ShopCallback.filter((F.menu == ShopEnum.WHERE_MONEY_GO)))
 async def shop_where_money_go(query: CallbackQuery):
     tb = TextBuilder()
-    tb.add("Розробник бота зараз служить в зсу. Їбашить кацапів щодня "
+    tb.add("Розробник бота зараз служить в ЗСУ. Єбаше кацапів щодня "
            "(Його канал: {channel})", channel=TextLink("5011", url="https://t.me/ua5011"))
-    tb.add("Зібрані гроші підуть на допомогу розрахунку", new_line=True)
+    tb.add("Зібрані гроші підуть на допомогу артилерійського розрахунку", new_line=True)
 
     kb = InlineKeyboardBuilder()
     back_button = InlineKeyboardButton(text="↩️ Назад", callback_data="back_to_shop")

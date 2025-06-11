@@ -39,7 +39,7 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
     await db.chat_user.remove_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
     await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.CASINO, current_time)
     await callback.message.edit_text(Text("🎰 Довбаний рот цього казино, блядь! "
-                                          "Ти хто такий, сука, щоб це зробити?..").as_markdown())
+                                          "Ти хто такий, сука, щоб це зробити?\\.\\.").as_markdown())
 
     balance -= callback_data.bet
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
@@ -51,39 +51,39 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
         bet_won = math.ceil(callback_data.bet * 50)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, ну ніхуя собі")
-        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🎰 {user}, ЄЄЄЄЄЄЄЄЄЄБАТЬ 777 МАКС ВІН🤑")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     elif casino_value in [43, 16, 32, 48]:
         bet_won = math.ceil(callback_data.bet * 10)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, пєрємога")
-        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🎰 {user}, ніхуйово")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     elif casino_value == 22:
         bet_won = math.ceil(callback_data.bet * 5)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, пєрємога")
-        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🎰 {user}, бля, ну майже")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     elif casino_value in [1, 11, 27, 59]:
         bet_won = math.ceil(callback_data.bet * 2)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user} пєрємога")
-        tb.add("🎰 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🎰 {user} переміг")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     elif casino_value in [4, 6, 8, 12, 17, 20, 24, 28, 33, 36, 38, 40, 44, 49, 52, 54, 56, 60]:
         balance += callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
-        tb.add("🏆 {user} бля шо за рахіт грає")
-        tb.add("🎰 Ти повернув: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🎰 {user}, наступного разу пощастить")
+        tb.add("↩️ Ти повернув {bet} кг\n", True, bet=Code(callback_data.bet))
     else:
-        tb.add("😔 {user} відсмоктав")
-        tb.add("🎰 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🎰 {user} програв")
+        tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 
-    tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(balance))
+    tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
     await asyncio.sleep(4)
     try:
-        await callback.bot.answer_callback_query(callback.id, "Шишки шишки шишки шишки шишки")
+        await callback.bot.answer_callback_query(callback.id, "Хто прочитай той лох")
         await callback.message.edit_text(tb.render())
     except TelegramRetryAfter:
         pass

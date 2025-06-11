@@ -21,58 +21,58 @@ def get_message(chat_user, from_user, game: Games) -> tuple[TextBuilder, InlineK
     tb, kb = TextBuilder(), get_bet_buttons(from_user.id, game, chat_user[3])
 
     if chat_user[3] <= 0:
-        return tb.add("Пішов нахуй бомжара. Зароби спочатку русофобію"), None
+        return tb.add("🫵😂 Пішов нахуй, бомж. Зароби спочатку русофобію"), None
 
     if game in game_messages:
         return game_messages[game](chat_user, from_user, tb), kb.as_markup()
     else:
-        raise ValueError(f"Unsupported game type: {game}")
+        raise ValueError(f"Непідтримуваний тип гри: {game}")
 
 
 def get_basketball_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🏀 {user} якщо не виграєш трахну твою маму\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🏀 Баскетбол. Попади м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_bowling_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🎳 {user} а тебе випадково в дитинстві не кидали?\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🎳 Боулінг. Вибий всі кеглі\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_casino_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🎰 {user} шо ти, лудоман спідозний\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🎰 Казіно. Постарайся вибити 777\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_darts_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🎯 {user}сідай на пляшку\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🎯Дартс. Попади в центр\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_dice_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🎲 {user}, якщо програєш,\nто заплатиш адміну через /shop\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🎲 Кістки. Вгадай парне чи непарне\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_football_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("⚽ {user} я знав що ти гей\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("⚽ Футбол. Попади в ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
 
 
 def get_game_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🧟‍♂️ {user} бля дивлюся на тебе і ригати хочеться\nВибери ставку\n\n🏷️ У тебе: {balance} кг\n",
+    tb.add("🧌 Вбий кацапа. Якщо вгадаєш де кацап, вб'єш його та отримаєш винагороду\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb

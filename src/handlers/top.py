@@ -9,14 +9,14 @@ from src.utils import generate_top
 @commands_router.message(Command("globaltop"))
 async def global_top(message: types.Message, db: Database):
     results = await db.chat_user.get_global_top()
-    title = "🏆 Глобальний топ"
+    title = "🏆 Загальний топ"
     await generate_top(message, results, title, True)
 
 
 @commands_router.message(Command("globaltop10"))
 async def global_top10(message: types.Message, db: Database):
     results = await db.chat_user.get_global_top(10)
-    title = "🏆 Глобальний топ 10"
+    title = "🏆 Загальний топ 10"
     await generate_top(message, results, title, True)
 
 

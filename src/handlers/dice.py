@@ -42,11 +42,11 @@ async def dice_callback_bet(callback: types.CallbackQuery, callback_data: BetCal
 
     kb.row(InlineKeyboardButton(text="➗ Парне", callback_data=even.pack()),
            InlineKeyboardButton(text="✖️ Непарне", callback_data=odd.pack()), width=2)
-    kb.row(InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
-           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
+    kb.row(InlineKeyboardButton(text="↩️ Назад", callback_data=back.pack()),
+           InlineKeyboardButton(text="⛔️ Нахуй", callback_data=cancel.pack()), width=1)
 
-    tb.add("🎲 {user} сосав?\n", user=TextMention(user.first_name, user=user))
-    tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
+    tb.add("🎲 {user} граємо?\n", user=TextMention(user.first_name, user=user))
+    tb.add("🪙 Ставка: {bet} кг", True, bet=Code(bet))
     tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
 
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
@@ -61,7 +61,7 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
 
     await db.chat_user.remove_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
     await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.DICE, current_time)
-    await callback.message.edit_text(Text("🎲 Кумедний факт хто кістки: Ти довбойоб").as_markdown())
+    await callback.message.edit_text(Text("🎲 Кидаю кістки\\.\\.").as_markdown())
 
     balance -= callback_data.bet
     user = TextMention(callback.from_user.first_name, user=callback.from_user)
@@ -74,16 +74,16 @@ async def dice_callback_bet_play(callback: types.CallbackQuery, callback_data: D
         bet_won = math.ceil(callback_data.bet * 2)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🏆 {user}, пєрємога {dice_value}, {parity}")
-        tb.add("🎲 Ти виграв: {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("🎲 {dice_value}, {parity}. {user} переміг")
+        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     else:
-        tb.add("😔 {user} відсмоктав {dice_value}, {parity}")
-        tb.add("🎲 Пройоб: {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("🎲 {dice_value}, {parity}. {user} програв")
+        tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 
-    tb.add("🏷️ В тебе: {new_balance} кг", True, new_balance=Code(balance))
+    tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
     await asyncio.sleep(4)
     try:
-        await callback.bot.answer_callback_query(callback.id, "Навіщо придумали повітря, якщо є шмаль?")
+        await callback.bot.answer_callback_query(callback.id, "Хто прочитай той лох")
         await callback.message.edit_text(tb.render())
     except TelegramRetryAfter:
         pass
