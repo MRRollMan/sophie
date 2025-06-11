@@ -76,7 +76,7 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
         tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     else:
         tb.add("🧌 {user} програв")
-        tb.add("📉 Ти проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 
     tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
 

@@ -20,7 +20,7 @@ bot_start_time = datetime.now()
 
 @commands_router.message(CommandStart())
 async def start(message: types.Message):
-    await message.reply(Text("👋 Вітаю. Додавай мене в чат та грай. Щоб дізнатися як, вивчай /help").as_markdown())
+    await message.reply(Text("👋 Вітаю. Додавай мене в чат та грай\nЩоб дізнатися як, вивчай /help\nПідтримка: @k0k0sbot").as_markdown())
 
 
 @commands_router.message(Command("about"))
@@ -83,14 +83,14 @@ async def leave(message: types.Message, chat_user: list):
 async def leave_callback(query: CallbackQuery, callback_data: LeaveCallback, db: Database):
     if callback_data.confirm:
         await db.user.remove_user(query.from_user.id)
-        await query.bot.answer_callback_query(query.id, "Передача інформації..")
+        await query.bot.answer_callback_query(query.id, "Хто прочитав той лох")
         await query.bot.edit_message_text(
             f"{query.from_user.mention_markdown()}, Машинка виїжджає. Ховай усі довгі предмети ",
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
         )
     else:
-        await query.bot.answer_callback_query(query.id, "Кажемо хлопцям відбій")
+        await query.bot.answer_callback_query(query.id, "Хто прочитав той лох")
         await query.bot.edit_message_text(
             f"{query.from_user.mention_markdown()} сьогодні не зґвалтують (Може завтра?)",
             chat_id=query.message.chat.id,

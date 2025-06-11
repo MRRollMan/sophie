@@ -110,6 +110,6 @@ class IsCurrentUser(BaseFilter):
     async def __call__(self, callback: types.CallbackQuery, callback_data):
         result = callback.from_user.id == callback_data.user_id
         if not result and self.send_callback:
-            await callback.bot.answer_callback_query(callback.id, "⚠️ Ці кноп0чки не для тебе, йди нахуй піздота йобана",
+            await callback.bot.answer_callback_query(callback.id, "🖕😂 Ці кнопочки не для тебе",
                                                      show_alert=True)
         return result

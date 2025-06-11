@@ -56,7 +56,7 @@ async def basketball_callback_bet_play(callback: types.CallbackQuery,
     elif basketball_value == 3:
         balance += callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
-        tb.add("🏀 {user}, наступного разу пощастить")
+        tb.add("🏀 {user}, бля, ну майже")
         tb.add("↩️ Ти повернув {bet} кг\n", True, bet=Code(callback_data.bet))
     else:
         tb.add("🏀 {user} програв")

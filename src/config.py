@@ -46,27 +46,27 @@ class Config(metaclass=SingletonMeta):
 
         except configparser.NoSectionError as e:
             logging.error(
-                f'Помилка завантаження конфігу: Секцію "{e.section.upper()}" не знайдено'
+                f'Помилка конфігу: Секцію "{e.section.upper()}" не знайдено'
             )
 
         except configparser.NoOptionError as e:
             logging.error(
-                f'Помилка завантаження конфігу: Опцію "{e.option.upper()}" не знайдено'
+                f'Помилка конфігу: Опцію "{e.option.upper()}" не знайдено'
             )
 
         except KeyError as e:
             logging.error(
-                f'Помилка завантаження конфігу: Опцію "{e}" не знайдено'
+                f'Помилка конфігу: Опцію "{e}" не знайдено'
             )
 
         except FileNotFoundError as e:
             logging.error(
-                f"Помилка завантаження конфігу: {e}"
+                f"Помилка конфігу: {e}"
             )
 
         except ValueError as e:
             logging.error(
-                f"Помилка завантаження конфігу: Неправильний формат значення - {e}"
+                f"Помилка конфігу: Неправильний формат значення - {e}"
             )
 
         else:

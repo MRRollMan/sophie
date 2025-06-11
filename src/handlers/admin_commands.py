@@ -28,7 +28,7 @@ async def chatlist_command(message: types.Message, db: Database):
             try:
                 chat_info = await message.bot.get_chat(chat_id)
                 chat_username = f"@{chat_info.username}" if chat_info.username else ""
-                chat_list_lines.append(f"🔹 {chat_id}, {chat_info.type}, {chat_info.title} {chat_username}")
+                chat_list_lines.append(f"🔹 {chat_id}, {chat_info.title} {chat_username}") #{chat_info.type}
             except TelegramAPIError as e:
                 removed_chats_count += 1
                 removed_chats_info.append(f"🔹 {chat_id} - йобнуто ({e.message})")
@@ -86,7 +86,7 @@ async def message_command(message: types.Message, command: CommandObject, db: Da
 
     tb.add("✅ Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
     if error_messages:
-        tb.add("\n⚠️ Еррори:\n{error_messages}", error_messages=error_messages, new_line=True)
+        tb.add("\n⚠️ Помилки:\n{error_messages}", error_messages=error_messages, new_line=True)
 
     await reply_and_delete(message, tb.render())
 

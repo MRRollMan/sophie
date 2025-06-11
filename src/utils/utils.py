@@ -31,7 +31,7 @@ def get_bet_buttons(user_id: int, game: Games, balance) -> InlineKeyboardBuilder
     ) for bet in percentages]
 
     kb.row(*BET_BUTTONS, width=3)
-    kb.row(InlineKeyboardButton(text="❌ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
+    kb.row(InlineKeyboardButton(text="⛔ Нахуй", callback_data=BetCallback(user_id=user_id, bet=0,
                                                                           action=BetButtonType.CANCEL, game=game).pack()
                                 ))
     return kb
@@ -58,9 +58,9 @@ def get_time_until(timestamp: int | float, timestamp2: int | float) -> str:
 
 async def is_can_play(balance: int, bet: int, callback: types.CallbackQuery) -> bool:
     if balance < bet:
-        await callback.bot.answer_callback_query(callback.id, "Пішов нахуй бомжара. Зароби спочатку русофобію")
+        await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
         return False
-    await callback.bot.answer_callback_query(callback.id, "Ну і хуйня")
+    await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
     return True
 
 
@@ -86,12 +86,12 @@ async def process_regular_bet(
     back = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.BACK, game=game)
     cancel = callback_type(user_id=user.id, bet=bet, action=BaseGameEnum.CANCEL, game=game)
 
-    kb.row(InlineKeyboardButton(text="▶️ Ебаш", callback_data=play.pack()),
-           InlineKeyboardButton(text="⬅️️ Назад", callback_data=back.pack()),
-           InlineKeyboardButton(text="❌ Нахуй", callback_data=cancel.pack()), width=1)
+    kb.row(InlineKeyboardButton(text="▶️ Єбаш", callback_data=play.pack()),
+           InlineKeyboardButton(text="↩️ Назад", callback_data=back.pack()),
+           InlineKeyboardButton(text="⛔ Нахуй", callback_data=cancel.pack()), width=1)
 
-    tb.add("{emoji} {user}, готовий хуйло?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
-    tb.add("🏷️ Твоя ставка: {bet} кг", True, bet=Code(bet))
+    tb.add("{emoji} {user}, граємо?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
+    tb.add("🪙 Ставка: {bet} кг", True, bet=Code(bet))
     tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=potential_win)
 
     await callback.message.edit_text(text=tb.render(), reply_markup=kb.as_markup())
@@ -175,7 +175,7 @@ async def generate_top(message: types.Message, results: list[tuple[int, int]], t
 
         total_kg = sum([value for _, value in results])
 
-        tb.add(f'{title}:\n🎱 Всього: {total_kg} кг\n')
+        tb.add(f'{title}:\n🟰 Всього: {total_kg} кг\n')
         count = 0
         for user_name, (_, rusophobia) in zip(user_names, results):
             if user_name:
