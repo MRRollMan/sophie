@@ -55,7 +55,7 @@ async def give(message: types.Message, command: CommandObject, db: Database, cha
     kb.row(InlineKeyboardButton(text="✅ Єбаш", callback_data=yes.pack()))
     kb.row(InlineKeyboardButton(text="⛔️ Нахуй", callback_data=no.pack()))
 
-    tb.add("🔄 {giver} хоче передати {value} кг {receiver}. \n👛 Баланс: {current_value} кг",
+    tb.add("🔄 {giver} хоче передати {value} кг {receiver}. \n\n👛 Баланс: {current_value} кг",
            value=Code(value), giver=TextMention(message.from_user.first_name, user=message.from_user),
            receiver=TextMention(receiver_user.first_name, user=receiver_user), current_value=Code(giver[3]))
 
@@ -80,7 +80,7 @@ async def give_yes(query: CallbackQuery, callback_data: GiveCallback, db: Databa
         await query.message.edit_text(tb.render())
         return
 
-    tb.add("✅ {giver} передав {value} кг {receiver}.\n👛 Баланс: {new_value} кг",
+    tb.add("✅ {giver} передав {value} кг {receiver}.\n\n👛 Баланс: {new_value} кг",
            value=Code(value), new_value=Code(new_balance),
            giver=TextMention(query.from_user.first_name, user=query.from_user),
            receiver=TextMention(receiver.user.first_name, user=receiver.user))

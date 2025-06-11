@@ -49,7 +49,7 @@ async def my_command(message: types.Message, chat_user):
     if russophobia:
         tb.add("👛 Баланс {user} {russophobia} кг", russophobia=Code(russophobia))
     else:
-        tb.add("У {user} 0 кг🫵😂")
+        tb.add("👛 Баланс {user} 0 кг 🫵😂")
     await message.reply(tb.render())
 
 
@@ -62,7 +62,7 @@ async def leave(message: types.Message, chat_user: list):
     if russophobia:
         tb.add("{user}, значить так, собака спідозна. Якщо підеш з гри, то всі твої дані (зокрема точне місце проживання тебе і всіх твоїх рідних) буде передано поважним особам. Після підтвердження, протягом 120 хвилин до тебе приїдуть у гості")
     else:
-        tb.add("У {user} 0 кг🫵😂")
+        tb.add("👛 Баланс {user} 0 кг 🫵😂")
 
     kb.add(
         InlineKeyboardButton(

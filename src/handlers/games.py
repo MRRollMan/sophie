@@ -35,7 +35,7 @@ async def killru_command(message: types.Message, db: Database, chat_user):
         tb.add("📈 {user}, +{russophobia} кг")
     else:
         tb.add("📉 {user}, -{russophobia} кг")
-    tb.add("👛 Баланс: {new_russophobia} кг\n⏰ Продовжуй через {ttp}", True)
+    tb.add("\n\n👛 Баланс: {new_russophobia} кг\n⏰ Продовжуй через {ttp}", True)
 
     await message.answer(tb.render())
 

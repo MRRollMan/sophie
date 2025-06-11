@@ -47,8 +47,8 @@ src/handlers/commands.py               63  tb.add("{user}, значить так
 src/handlers/shop.py                   41  tb.add("Головна умова, вказати ID чату де ви хочете поповнення русофобії "
 src/handlers/shop.py                   39  tb.add("Посилання на банку: {bank}", bank=TextLink("send.monobank.ua", url=config.DONATE))
 src/handlers/shop.py                   40  tb.add("Робите донат на потрібну вам суму, і відправляєте скрін сплати в @k0k0sbot", new_line=True)
-src/handlers/commands.py               52  tb.add("У {user} 0 кг🫵😂")
-src/handlers/commands.py               65  tb.add("У {user} 0 кг🫵😂")
+src/handlers/commands.py               52  tb.add("👛 Баланс {user} 0 кг 🫵😂")
+src/handlers/commands.py               65  tb.add("👛 Баланс {user} 0 кг 🫵😂")
 src/handlers/basketball.py             60  tb.add("↩️ Ти повернув {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/bowling.py                65  tb.add("↩️ Ти повернув {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/casino.py                 78  tb.add("↩️ Ти повернув {bet} кг\n", True, bet=Code(callback_data.bet))
@@ -64,7 +64,7 @@ src/handlers/admin_commands.py         50  tb.add("⚠️ Розсилка ме�
 src/handlers/football.py               53  tb.add("⚽ {user} переміг")
 src/handlers/football.py               56  tb.add("⚽ {user} програв")
 src/utils/game_messages.py             68  tb.add("⚽ Футбол. Влуч у ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
-src/handlers/give.py                   83  tb.add("✅ {giver} передав {value} кг {receiver}.\n👛 Баланс: {new_value} кг",
+src/handlers/give.py                   83  tb.add("✅ {giver} передав {value} кг {receiver}.\n\n👛 Баланс: {new_value} кг",
 src/handlers/admin_commands.py        170  tb.add("✅ {user_id} тепер має {updated_value} кг русофобії",
 src/handlers/admin_commands.py         87  tb.add("✅ Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
 src/handlers/darts.py                  52  tb.add("🎯 {user} переміг")
@@ -92,14 +92,14 @@ src/handlers/basketball.py             62  tb.add("🏀 {user} програв")
 src/handlers/basketball.py             59  tb.add("🏀 {user}, бля, ну майже")
 src/utils/game_messages.py             33  tb.add("🏀 Баскетбол. Влуч м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
 src/utils/utils.py                     94  tb.add("🪙 Ставка: {bet} кг", True, bet=Code(bet))
-src/handlers/casino.py                 83  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/game.py                   81  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/bowling.py                70  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/dice.py                   83  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/football.py               59  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/basketball.py             65  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/darts.py                  63  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
-src/handlers/games.py                  38  tb.add("👛 Баланс: {new_russophobia} кг\n⏰ Продовжуй через {ttp}", True)
+src/handlers/casino.py                 83  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/game.py                   81  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/bowling.py                70  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/dice.py                   83  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/football.py               59  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/basketball.py             65  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/darts.py                  63  tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
+src/handlers/games.py                  38  tb.add("\n\n👛 Баланс: {new_russophobia} кг\n⏰ Продовжуй через {ttp}", True)
 src/handlers/admin_commands.py         37  tb.add("💬 Чати ({chats_count}):", chats_count=total_chats_count)
 src/handlers/dice.py                   50  tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
 src/handlers/game.py                   50  tb.add("💰 Можливий виграш: {potential_win} кг", True, potential_win=Code(potential_win))
@@ -115,7 +115,7 @@ src/handlers/casino.py                 73  tb.add("📈 Ти виграв {bet_w
 src/handlers/darts.py                  53  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
 src/handlers/dice.py                   78  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
 src/handlers/football.py               54  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
-src/handlers/game.py                   76  tb.add("📈 Ти виграв {bet_won} кг\n\n", True, bet_won=Code(bet_won))
+src/handlers/game.py                   76  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
 src/handlers/games.py                  37  tb.add("📉 {user}, -{russophobia} кг")
 src/handlers/basketball.py             63  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/bowling.py                68  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
@@ -123,9 +123,9 @@ src/handlers/casino.py                 81  tb.add("📉 Проїбав {bet} к�
 src/handlers/darts.py                  61  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/dice.py                   81  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/football.py               57  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
-src/handlers/game.py                   79  tb.add("📉 Проїбав {bet} кг\n\n", True, bet=Code(callback_data.bet))
+src/handlers/game.py                   79  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/commands.py               36  tb.add("📡 Sophie {version}\n", True)
-src/handlers/give.py                   58  tb.add("🔄 {giver} хоче передати {value} кг {receiver}. \n👛 Баланс: {current_value} кг",
+src/handlers/give.py                   58  tb.add("🔄 {giver} хоче передати {value} кг {receiver}. \n\n👛 Баланс: {current_value} кг",
 src/handlers/game.py                   75  tb.add("🧌 {user} переміг")
 src/handlers/game.py                   78  tb.add("🧌 {user} програв")
 src/handlers/game.py                   48  tb.add("🧌 {user}, граємо?\n", user=TextMention(user.first_name, user=user))
