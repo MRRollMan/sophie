@@ -39,7 +39,7 @@ async def basketball_callback_bet_play(callback: types.CallbackQuery,
 
     await db.chat_user.remove_user_russophobia(chat_id, callback.from_user.id, callback_data.bet)
     await db.cooldown.update_user_cooldown(chat_id, callback.from_user.id, Games.BASKETBALL, current_time)
-    await callback.message.edit_text(Text("🏀 Кидаю м'яч\\.\\.").as_markdown())
+    await callback.message.edit_text(Text("🏀 Кидаю м'яч..").as_markdown())
 
     balance -= callback_data.bet
     user = TextMention(callback.from_user.first_name, user=callback.from_user)

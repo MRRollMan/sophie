@@ -47,7 +47,7 @@ async def my_command(message: types.Message, chat_user):
         message.from_user.username or message.from_user.first_name, user=message.from_user
     ))
     if russophobia:
-        tb.add("{user} має {russophobia} кг", russophobia=Code(russophobia))
+        tb.add("👛 Баланс {user} {russophobia} кг", russophobia=Code(russophobia))
     else:
         tb.add("У {user} 0 кг🫵😂")
     await message.reply(tb.render())

@@ -42,7 +42,7 @@ src/handlers/admin_commands.py         89  tb.add("\n⚠️ Помилки:\n{er
 src/utils/utils.py                     93  tb.add("{emoji} {user}, граємо?\n", emoji=emoji, user=TextMention(user.first_name, user=user))
 src/handlers/commands.py               37  tb.add("{news_channel}", True)
 src/handlers/commands.py               38  tb.add("{source}\n", True)
-src/handlers/commands.py               50  tb.add("{user} має {russophobia} кг", russophobia=Code(russophobia))
+src/handlers/commands.py               50  tb.add("👛 Баланс {user} {russophobia} кг", russophobia=Code(russophobia))
 src/handlers/commands.py               63  tb.add("{user}, значить так, собака спідозна. Якщо підеш з гри, то всі твої дані (зокрема точне місце проживання тебе і всіх твоїх рідних) буде передано поважним особам. Після підтвердження, протягом 120 хвилин до тебе приїдуть у гості")
 src/handlers/shop.py                   41  tb.add("Головна умова, вказати ID чату де ви хочете поповнення русофобії "
 src/handlers/shop.py                   39  tb.add("Посилання на банку: {bank}", bank=TextLink("send.monobank.ua", url=config.DONATE))
@@ -115,7 +115,7 @@ src/handlers/casino.py                 73  tb.add("📈 Ти виграв {bet_w
 src/handlers/darts.py                  53  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
 src/handlers/dice.py                   78  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
 src/handlers/football.py               54  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
-src/handlers/game.py                   76  tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
+src/handlers/game.py                   76  tb.add("📈 Ти виграв {bet_won} кг\n\n", True, bet_won=Code(bet_won))
 src/handlers/games.py                  37  tb.add("📉 {user}, -{russophobia} кг")
 src/handlers/basketball.py             63  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/bowling.py                68  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
@@ -123,7 +123,7 @@ src/handlers/casino.py                 81  tb.add("📉 Проїбав {bet} к�
 src/handlers/darts.py                  61  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/dice.py                   81  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
 src/handlers/football.py               57  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
-src/handlers/game.py                   79  tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
+src/handlers/game.py                   79  tb.add("📉 Проїбав {bet} кг\n\n", True, bet=Code(callback_data.bet))
 src/handlers/commands.py               36  tb.add("📡 Sophie {version}\n", True)
 src/handlers/give.py                   58  tb.add("🔄 {giver} хоче передати {value} кг {receiver}. \n👛 Баланс: {current_value} кг",
 src/handlers/game.py                   75  tb.add("🧌 {user} переміг")
@@ -169,3 +169,18 @@ src/handlers/help.py                   20  InlineKeyboardButton(text="🏀", cal
 src/handlers/shop.py                   20  kb.row(InlineKeyboardButton(text="💲 Яка ціна?", callback_data=what_is_price_btn.pack()))
 src/handlers/shop.py                   21  kb.row(InlineKeyboardButton(text="💳 Куди підуть гроші?", callback_data=where_money_go_btn.pack()))
 src/handlers/game.py                   44  kb.row(*[InlineKeyboardButton(text="🧌", callback_data=cell.pack()) for cell in cells], width=3)
+src/handlers/game.py                   84 await callback.message.edit_text("🧌 Перевіряю..")
+src/handlers/football.py               41 await callback.message.edit_text(Text("⚽ Забиваю м'яч..").as_markdown())
+src/handlers/darts.py                  40 await callback.message.edit_text(Text("🎯 Кидаю дротик..").as_markdown())
+src/handlers/casino.py                 41 await callback.message.edit_text(Text("🎰 Довбаний рот цього казино, блядь! "
+                                          											"Ти хто такий, сука, щоб це зробити?..").as_markdown())
+src/handlers/dice.py                   64 await callback.message.edit_text(Text("🎲 Кидаю кістки..").as_markdown())
+src/handlers/bowling.py                41 await callback.message.edit_text(Text("🎳 Кидаю шар..").as_markdown())
+src/handlers/basketball.py             42 await callback.message.edit_text(Text("🏀 Кидаю м'яч..").as_markdown())
+src/filters.py                         64 await callback.message.edit_text(TextBuilder("🫵😂 Пішов нахуй, бомж. Зароби спочатку русофобію").render())
+src/handlers/games.py                  53 await callback.message.edit_text(TextBuilder(f"⚠️ Лох злякався. "
+                                                 										f"{"{bet} " if callback_data.bet > 0 else ""}кг повернуто",
+                                                 										bet=callback_data.bet).render())
+src/handlers/help.py                   38 await query.message.edit_text("⚙️ Тут ти можеш почитати\nпро мене все", reply_markup=kb.as_markup())
+src/handlers/give.py                  102 await query.message.edit_text("✅ Ну ок, хулі")
+src/handlers/shop.py                   88 await query.message.edit_text("💳 Хочеш більше русофобії?\n"

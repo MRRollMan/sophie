@@ -73,15 +73,15 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
         tb.add("🧌 {user} переміг")
-        tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
+        tb.add("📈 Ти виграв {bet_won} кг\n\n", True, bet_won=Code(bet_won))
     else:
         tb.add("🧌 {user} програв")
-        tb.add("📉 Проїбав {bet} кг\n", True, bet=Code(callback_data.bet))
+        tb.add("📉 Проїбав {bet} кг\n\n", True, bet=Code(callback_data.bet))
 
     tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
 
     try:
-        await callback.message.edit_text("🧌 Перевіряю\\.\\.")
+        await callback.message.edit_text("🧌 Перевіряю..")
         await asyncio.sleep(4)
         await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
         await callback.message.edit_text(tb.render())
