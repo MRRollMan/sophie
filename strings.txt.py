@@ -63,18 +63,18 @@ src/handlers/give.py                   26  tb.add("⚠️ Ну і єблан. О
 src/handlers/admin_commands.py         50  tb.add("⚠️ Розсилка меседжів\n\n"
 src/handlers/football.py               53  tb.add("⚽ {user} переміг")
 src/handlers/football.py               56  tb.add("⚽ {user} програв")
-src/utils/game_messages.py             68  tb.add("⚽ Футбол. Попади в ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+src/utils/game_messages.py             68  tb.add("⚽ Футбол. Влуч у ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
 src/handlers/give.py                   83  tb.add("✅ {giver} передав {value} кг {receiver}.\n👛 Баланс: {new_value} кг",
 src/handlers/admin_commands.py        170  tb.add("✅ {user_id} тепер має {updated_value} кг русофобії",
 src/handlers/admin_commands.py         87  tb.add("✅ Кількість чатів: {successful_sends}", successful_sends=Code(successful_sends))
 src/handlers/darts.py                  52  tb.add("🎯 {user} переміг")
 src/handlers/darts.py                  60  tb.add("🎯 {user} програв")
 src/handlers/darts.py                  57  tb.add("🎯 {user}, ну майже")
-src/utils/game_messages.py             54  tb.add("🎯Дартс. Попади в центр\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+src/utils/game_messages.py             54  tb.add("🎯Дартс. Влуч у центр\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
 src/handlers/casino.py                 72  tb.add("🎰 {user} переміг")
 src/handlers/casino.py                 80  tb.add("🎰 {user} програв")
 src/handlers/casino.py                 54  tb.add("🎰 {user}, ЄЄЄЄЄЄЄЄЄЄБАТЬ 777 МАКС ВІН🤑")
-src/handlers/casino.py                 66  tb.add("🎰 {user}, бля, ну майже")
+src/handlers/casino.py                 66  tb.add("🎰 {user}, переміг")
 src/handlers/casino.py                 77  tb.add("🎰 {user}, наступного разу пощастить")
 src/handlers/casino.py                 60  tb.add("🎰 {user}, ніхуйово")
 src/utils/game_messages.py             47  tb.add("🎰 Казіно. Постарайся вибити 777\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
@@ -90,7 +90,7 @@ src/utils/game_messages.py             40  tb.add("🎳 Боулінг. Виби
 src/handlers/basketball.py             54  tb.add("🏀 {user} переміг")
 src/handlers/basketball.py             62  tb.add("🏀 {user} програв")
 src/handlers/basketball.py             59  tb.add("🏀 {user}, бля, ну майже")
-src/utils/game_messages.py             33  tb.add("🏀 Баскетбол. Попади м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+src/utils/game_messages.py             33  tb.add("🏀 Баскетбол. Влуч м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
 src/utils/utils.py                     94  tb.add("🪙 Ставка: {bet} кг", True, bet=Code(bet))
 src/handlers/casino.py                 83  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
 src/handlers/game.py                   81  tb.add("👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))

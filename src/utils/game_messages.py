@@ -30,7 +30,7 @@ def get_message(chat_user, from_user, game: Games) -> tuple[TextBuilder, InlineK
 
 
 def get_basketball_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🏀 Баскетбол. Попади м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+    tb.add("🏀 Баскетбол. Влуч м'ячем в кільце\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
@@ -51,7 +51,7 @@ def get_casino_message(chat_user, from_user, tb) -> TextBuilder:
 
 
 def get_darts_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("🎯Дартс. Попади в центр\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+    tb.add("🎯Дартс. Влуч у центр\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb
@@ -65,7 +65,7 @@ def get_dice_message(chat_user, from_user, tb) -> TextBuilder:
 
 
 def get_football_message(chat_user, from_user, tb) -> TextBuilder:
-    tb.add("⚽ Футбол. Попади в ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
+    tb.add("⚽ Футбол. Влуч у ворота\n\n👛 Баланс: {balance} кг\n🪙 {user}, роби ставку\n",
            user=TextMention(from_user.first_name, user=from_user),
            balance=Code(chat_user[3]))
     return tb

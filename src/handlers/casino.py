@@ -63,7 +63,7 @@ async def casino_callback_bet_play(callback: types.CallbackQuery,
         bet_won = math.ceil(callback_data.bet * 5)
         balance += bet_won + callback_data.bet
         await db.chat_user.add_user_russophobia(chat_id, callback.from_user.id, bet_won + callback_data.bet)
-        tb.add("🎰 {user}, бля, ну майже")
+        tb.add("🎰 {user}, переміг")
         tb.add("📈 Ти виграв {bet_won} кг\n", True, bet_won=Code(bet_won))
     elif casino_value in [1, 11, 27, 59]:
         bet_won = math.ceil(callback_data.bet * 2)
