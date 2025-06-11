@@ -62,7 +62,7 @@ async def leave(message: types.Message, chat_user: list):
     if russophobia:
         tb.add("{user}, значить так, собака спідозна. Якщо підеш з гри, то всі твої дані (зокрема точне місце проживання тебе і всіх твоїх рідних) буде передано поважним особам. Після підтвердження, протягом 120 хвилин до тебе приїдуть у гості")
     else:
-        tb.add("👛 Баланс {user} 0 кг 🫵😂")
+        tb.add("⚠️ {user}, в тебе й так 0 кг")
 
     kb.add(
         InlineKeyboardButton(
@@ -85,14 +85,14 @@ async def leave_callback(query: CallbackQuery, callback_data: LeaveCallback, db:
         await db.user.remove_user(query.from_user.id)
         await query.bot.answer_callback_query(query.id, "Хто прочитав той лох")
         await query.bot.edit_message_text(
-            f"{query.from_user.mention_markdown()}, Машинка виїжджає. Ховай усі довгі предмети ",
+            f"{query.from_user.mention_markdown()}, Машинка виїжджає\\. Ховай усі довгі предмети",
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
         )
     else:
         await query.bot.answer_callback_query(query.id, "Хто прочитав той лох")
         await query.bot.edit_message_text(
-            f"{query.from_user.mention_markdown()} сьогодні не зґвалтують (Може завтра?)",
+            f"{query.from_user.mention_markdown()} сьогодні не зґвалтують \\(Може завтра?\\)",
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
         )

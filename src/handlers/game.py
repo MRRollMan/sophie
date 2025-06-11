@@ -81,7 +81,7 @@ async def game_callback_bet_play(callback: types.CallbackQuery, callback_data: G
     tb.add("\n👛 Баланс: {new_balance} кг", True, new_balance=Code(balance))
 
     try:
-        await callback.message.edit_text("🧌 Перевіряю..")
+        await callback.message.edit_text("🧌 Перевіряю\\.\\.")
         await asyncio.sleep(4)
         await callback.bot.answer_callback_query(callback.id, "Хто прочитав той лох")
         await callback.message.edit_text(tb.render())
